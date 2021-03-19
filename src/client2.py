@@ -21,14 +21,9 @@ PORT = int(PORT)
 # Compose complete HTTP request
 GET_request = f"{HTTP_COMMAND} / HTTP/1.1\r\nHost: {URI}\r\n\r\n"
 
-if HTTP_COMMAND in ["POST", "PUT"]:
-    text = input("String to send to HTTP server: ")
-    GET_request = f"{HTTP_COMMAND} / HTTP/1.1\r\nHost: {URI}\r\n" + text + "\r\n\r\n"
-
 # Connect to given URI
 client.connect((URI, PORT))
 
-client.sendall(GET_request.encode('ascii'))
 
 
 def save_body(body):
@@ -173,8 +168,24 @@ def receive_header():
     print(body.decode('utf-8'))
 
 
+def send_post():
+    rel_dir = input('Relative directory to file: ')
+    contents = input("String to POST to file on HTTP server: ")
+    request = f"POST {rel_dir} HTTP/1.1\r\n"
+    request += f"Host: {URI}\r\n"
+    request += f"Content-Length: {str(len(contents))}" + "\r\n\r\n"#"\r\n"
+    request += contents + "\r\n"
+    client.sendall(request.encode('ascii'))
+
+
 if HTTP_COMMAND == 'GET':
+    client.sendall(GET_request.encode('ascii'))
     receive_body()
 elif HTTP_COMMAND == 'HEAD':
+    client.sendall(GET_request.encode('ascii'))
     receive_header()
-
+elif HTTP_COMMAND == 'POST':
+    send_post()
+# if HTTP_COMMAND in ["POST", "PUT"]:
+#     text = input("String to send to HTTP server: ")
+#     GET_request = f"{HTTP_COMMAND} / HTTP/1.1\r\nHost: {URI}\r\n" + text + "\r\n\r\n"

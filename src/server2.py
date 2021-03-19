@@ -23,7 +23,7 @@ def get_404_page():
     return b"<!DOCTYPE html><html><body><p>Error 404: File not found</p></body></html>"
 
 
-def get_get_response(path):
+def get_get_response(path, request_type):
     if path == '/':
         path_to_read = '../myHTMLpage/myHTMLpage.html'
     else:
@@ -32,8 +32,20 @@ def get_get_response(path):
         with open(path_to_read, 'rb') as f:  # 'rb': read in binary mode
             return f.read(), 200
     except IOError:
-        print('ERROR: requested file not found.')
+        if request_type in ['GET', 'HEAD']:
+            print('ERROR: requested file not found.')
         return get_404_page(), 404
+
+
+def handle_put(data):
+    rel_dir = data.split()[1]
+    string = data.split('\r\n\r\n')[1].rstrip()
+    try:
+        with open('../myHTMLpage' + rel_dir, 'a+') as f:
+            f.write(string)
+            return 200, string
+    except IOError:
+        return 400, get_404_page()
 
 
 def get_response_headers(code, body):
@@ -65,15 +77,18 @@ def listen_to_client(client, address):
                 print("Detected ", request_type, " request.")
 
                 path = request.split()[1]
-                response_body, response_code = get_get_response(path)
+                response_body, response_code = get_get_response(path, request_type)
                 response_header = get_response_headers(response_code, response_body)
                 if request_type == 'GET':
                     client.sendall(response_header.encode('ascii') + response_body)
                 elif request_type == 'HEAD':
                     client.sendall(response_header.encode('ascii'))
-                elif request_type == 'PUT':
-                    raise NotImplemented('Not implemented yet.')
                 elif request_type == 'POST':
+                    response_code, string = handle_put(request)
+                    response_header = get_response_headers(response_code, string)
+                    client.sendall(response_header.encode('ascii'))
+                    print(response_header)
+                elif request_type == 'PUT':
                     raise NotImplemented('Not implemented yet.')
             else:
                 # raise Exception('Client disconnected')

@@ -106,11 +106,12 @@ def save_images(soup):
 def change_src_to_local_img_location(soup):
     for img in soup.find_all("img"):
         # Replace prefix of url of webpage with relative local path to directory of saved image:
-        if '/' not in img['src']:
-            img['src'] = "../img/" + img['src']
-        else:
-            img['src'] = img['src'].replace("/".join(img['src'].split('/')[:-1]), "../img/")
-            # img['src'] = "/".join(os.getcwd().split("/")[:-1]) + '/' + img['src'].split("/")[-1]
+        img['src'] = '../img/' + img['src'].split('/')[-1]
+        # if '/' not in img['src']:
+        #     img['src'] = "../img/" + img['src']
+        # else:
+        #     img['src'] = img['src'].replace("/".join(img['src'].split('/')[:-1]), "../img/")
+        #     # img['src'] = "/".join(os.getcwd().split("/")[:-1]) + '/' + img['src'].split("/")[-1]
 
 
 def receive_img_length(total_length, body_start, name):
@@ -162,4 +163,18 @@ def receive_image(name):
     # based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
 
 
-receive_body()
+def receive_header():
+    # Average header size turns out to be approx. 700-800 bytes, up to 2kB.
+    # source: https://stackoverflow.com/questions/5358109/what-is-the-average-size-of-an-http-request-response-header
+    body = client.recv(2048)
+    # HEAD contents shouldn't be stored in a file, as mentioned in th Q&A.
+    # save_body(body)
+    print('Resulting HEAD response:')
+    print(body.decode('utf-8'))
+
+
+if HTTP_COMMAND == 'GET':
+    receive_body()
+elif HTTP_COMMAND == 'HEAD':
+    receive_header()
+

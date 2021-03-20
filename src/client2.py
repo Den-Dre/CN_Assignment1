@@ -25,12 +25,11 @@ GET_request = f"{HTTP_COMMAND} / HTTP/1.1\r\nHost: {URI}\r\n\r\n"
 client.connect((URI, PORT))
 
 
-
 def save_body(body):
     soup = bs(body, "html.parser")
     get_image_urls(soup)
     save_images(soup)
-    with open('../out/body.html', 'w') as f:
+    with open(os.sep.join(['..', 'out', 'body.html']), 'w') as f:
         try:
             f.write(str(soup))
         except IOError:
@@ -101,7 +100,7 @@ def save_images(soup):
 def change_src_to_local_img_location(soup):
     for img in soup.find_all("img"):
         # Replace prefix of url of webpage with relative local path to directory of saved image:
-        img['src'] = '../img/' + img['src'].split('/')[-1]
+        img['src'] = f"..{os.sep}img{os.sep}{img['src'].split('/')[-1]}"
         # if '/' not in img['src']:
         #     img['src'] = "../img/" + img['src']
         # else:
@@ -117,7 +116,7 @@ def receive_img_length(total_length, body_start, name):
     # headers = body.split(b'\r\n\r\n')[0]
     # image = body[len(headers) + 4:]
     # with open(f'{os.getcwd()}/img/{name.split("/")[-1]}', 'w+b') as f:
-    with open(f'../img/{name.split("/")[-1]}', 'w+b') as f:
+    with open(f'..{os.sep}img{os.sep}{name.split("/")[-1]}', 'w+b') as f:
         f.write(body)
 
 
@@ -130,7 +129,7 @@ def receive_img_chunks(body_received, name):
         prev_resp = resp
         resp = client.recv(1024)
         body += resp
-    with open(f'../img/{name.split("/")[-1]}', 'w+b') as f:
+    with open(f'..{os.sep}img{os.sep}{name.split("/")[-1]}', 'w+b') as f:
         f.write(body)
 
 
@@ -168,13 +167,25 @@ def receive_header():
     print(body.decode('utf-8'))
 
 
-def send_post():
-    rel_dir = input('Relative directory to file: ')
-    contents = input("String to POST to file on HTTP server: ")
-    request = f"POST {rel_dir} HTTP/1.1\r\n"
+def compose_request(request_type, rel_dir, contents):
+    request = f"{request_type} {rel_dir} HTTP/1.1\r\n"
     request += f"Host: {URI}\r\n"
     request += f"Content-Length: {str(len(contents))}" + "\r\n\r\n"#"\r\n"
     request += contents + "\r\n"
+    return request
+
+
+def send_post():
+    rel_dir = input('Relative directory to file: ')
+    contents = input("String to POST to file on server: ")
+    request = compose_request('POST', rel_dir, contents)
+    client.sendall(request.encode('ascii'))
+
+
+def send_put():
+    rel_dir = input('Relative directory to file: ')
+    contents = input('String to PUT to file on server: ')
+    request = compose_request('PUT', rel_dir, contents)
     client.sendall(request.encode('ascii'))
 
 
@@ -186,6 +197,8 @@ elif HTTP_COMMAND == 'HEAD':
     receive_header()
 elif HTTP_COMMAND == 'POST':
     send_post()
+elif HTTP_COMMAND == 'PUT':
+    send_put()
 # if HTTP_COMMAND in ["POST", "PUT"]:
 #     text = input("String to send to HTTP server: ")
 #     GET_request = f"{HTTP_COMMAND} / HTTP/1.1\r\nHost: {URI}\r\n" + text + "\r\n\r\n"

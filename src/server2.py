@@ -1,3 +1,4 @@
+import os
 import socket
 import threading
 import time
@@ -20,14 +21,20 @@ def ask_port():
 
 
 def get_404_page():
-    return b"<!DOCTYPE html><html><body><p>Error 404: File not found</p></body></html>"
+    return b"<!DOCTYPE html><html><body><p>Error 404: File not found.</p></body></html>"
+
+
+def get_500_page():
+    return b"<!DOCTYPE html><html><body><p>Error 500: Internal server error.</p></body></html>"
 
 
 def get_get_response(path, request_type):
     if path == '/':
-        path_to_read = '../myHTMLpage/myHTMLpage.html'
+        # form: '../myHTMLpage/myHTMLpage.html'
+        path_to_read = os.sep.join(['..', 'myHTMLpage', 'myHTMLpage.html'])
     else:
-        path_to_read = '../myHTMLpage/' + path
+        # form: '../myHTMLpage/' + path
+        path_to_read = os.sep.join(['..', 'myHTMLpage', path])
     try:
         with open(path_to_read, 'rb') as f:  # 'rb': read in binary mode
             return f.read(), 200
@@ -37,15 +44,26 @@ def get_get_response(path, request_type):
         return get_404_page(), 404
 
 
-def handle_put(data):
+def handle_post(data):
     rel_dir = data.split()[1]
     string = data.split('\r\n\r\n')[1].rstrip()
     try:
-        with open('../myHTMLpage' + rel_dir, 'a+') as f:
+        with open('..' + os.sep + 'myHTMLpage' + rel_dir, 'a+') as f:
             f.write(string)
             return 200, string
     except IOError:
         return 400, get_404_page()
+
+
+def handle_put(data):
+    rel_dir = data.split()[1]
+    string = data.split('\r\n\r\n')[1].rstrip()
+    with open('..' + os.sep + 'myHTMLpage' + rel_dir, 'w') as f:
+        try:
+            f.write(string)
+            return 200, string
+        except IOError:
+            return 500, get_500_page()
 
 
 def get_response_headers(code, body):
@@ -54,6 +72,10 @@ def get_response_headers(code, body):
         header += 'HTTP/1.1 200 OK\r\n'
     elif code == 404:
         header += 'HTTP/1.1 404 Not Found\r\n'
+    elif code == 500:
+        header += 'HTTP/1.1 500 Internal Server Error\r\n'
+    else:
+        raise NotImplemented(f'Error code {code} not implemented.')
     header += 'Content-Type: text/html; charset=UTF-8\r\n'
     current_date = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
     header += 'Date: ' + current_date + '\r\n'
@@ -84,12 +106,16 @@ def listen_to_client(client, address):
                 elif request_type == 'HEAD':
                     client.sendall(response_header.encode('ascii'))
                 elif request_type == 'POST':
-                    response_code, string = handle_put(request)
+                    response_code, string = handle_post(request)
                     response_header = get_response_headers(response_code, string)
                     client.sendall(response_header.encode('ascii'))
                     print(response_header)
                 elif request_type == 'PUT':
-                    raise NotImplemented('Not implemented yet.')
+                    response_code, string = handle_put(request)
+                    response_header = get_response_headers(response_code, string)
+                    client.sendall(response_header.encode('ascii'))
+                    print(response_header)
+
             else:
                 # raise Exception('Client disconnected')
                 print("Client: ", address[0], " disconnected.")

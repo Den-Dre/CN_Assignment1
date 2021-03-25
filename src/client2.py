@@ -316,6 +316,7 @@ class MyClient:
         request = f"{request_type} {rel_dir} HTTP/1.1\r\n"
         request += f"Host: {self.URI}\r\n"
         request += f"Content-Length: {str(len(contents))}\r\n\r\n"  # "\r\n"
+        request += f"If-Modified-Since: 2021-03-25T15:12:00"
         request += contents + "\r\n"
         return request
 

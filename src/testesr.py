@@ -20,6 +20,7 @@ import os
 # site = trimmed_uri.split('/')[0]
 # print(site, trimmed_uri[len(site)+1:])
 import pathlib
+from datetime import datetime
 
 
 def parse_uri(uri):
@@ -38,10 +39,4 @@ def parse_uri(uri):
 # print(os.getcwd()[:-4])
 # print(os.path.join('a','b','c'))
 
-os.chdir(pathlib.Path(__file__).parent.absolute())
-test = '../remove/*'
-r = glob.glob(test)
-print(str(r))
-for i in r:
-    print(str(i))
-    os.remove(i)
+print("2021-03-25T15:12:00" > datetime.now().replace(microsecond=0).isoformat())

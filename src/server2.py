@@ -1,23 +1,32 @@
+import json
 import os
+import signal
 import socket
+import sys
 import threading
 import time
 
+# TODO:
+#  redirect if not https,
+#  500 code only thrown when server crashes, not with bad request ✓
+#  Arguments to program should be given when program's called, only body of PUT/POST request should be interactive ✓
+#  Http:// moet er ook nog bij kunnen ✓
+#  Redirects bij code 301 volgen ✓
+#  Fix: afbeelding soms niet volledig geladen (Google logo)
+#  Fix: afbeeldingen met src='volledige http uri' kunnen niet laden ✓
+#  If-Modified-Since header
+
 
 def get_ipv4():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
+    """ A method to retrieve the local IPv4-address of the machine.
 
+    Works by connecting a socket to the DNS server of Google on port 80 and
+    extracting the IPv4-address out of the the obtained name of the socket.
+    """
 
-def ask_port():
-    while True:
-        port_tmp = input("Which port do you want to host on? ")
-        try:
-            return int(port_tmp)
-        except ValueError:
-            print("Please enter an integer value: ")
-            pass
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.connect(("8.8.8.8", 80))
+    return sock.getsockname()[0]
 
 
 def get_404_page():
@@ -25,34 +34,43 @@ def get_404_page():
 
 
 def get_500_page():
-    return b"<!DOCTYPE html><html><body><p>Error 500: Internal server error.</p></body></html>"
+    return b""
 
 
-def get_get_response(path, request_type):
+def get_400_page():
+    return b"<!DOCTYPE html><html><body><p>Error 400: Bad request.</p></body></html>"
+
+
+def get_get_response(path):
     if path == '/':
-        # form: '../myHTMLpage/myHTMLpage.html'
         path_to_read = os.sep.join(['..', 'myHTMLpage', 'myHTMLpage.html'])
     else:
-        # form: '../myHTMLpage/' + path
         path_to_read = os.sep.join(['..', 'myHTMLpage', path])
     try:
         with open(path_to_read, 'rb') as f:  # 'rb': read in binary mode
             return f.read(), 200
     except IOError:
-        if request_type in ['GET', 'HEAD']:
-            print('ERROR: requested file not found.')
         return get_404_page(), 404
 
 
 def handle_post(data):
     rel_dir = data.split()[1]
     string = data.split('\r\n\r\n')[1].rstrip()
+    # Store Last-Modified date
+    try:
+        with open('..' + os.sep + 'myHTMLpage' + os.sep + 'lastModifiedDates') as f:
+            data = json.load(f)
+            for i in data['last_modified_dates']:
+                print(i)
+    except IOError:
+        print("Couldn't write Last-Modified date for file: ", rel_dir)
     try:
         with open('..' + os.sep + 'myHTMLpage' + rel_dir, 'a+') as f:
             f.write(string)
             return 200, string
     except IOError:
-        return 400, get_404_page()
+        print(f'ERROR: file at {rel_dir} not found.')
+        return 404, get_404_page()
 
 
 def handle_put(data):
@@ -75,7 +93,7 @@ def get_response_headers(code, body):
     elif code == 500:
         header += 'HTTP/1.1 500 Internal Server Error\r\n'
     else:
-        raise NotImplemented(f'Error code {code} not implemented.')
+        raise NotImplemented(f'Error code {code} not implemented. Body: {body}')
     header += 'Content-Type: text/html; charset=UTF-8\r\n'
     current_date = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
     header += 'Date: ' + current_date + '\r\n'
@@ -86,7 +104,7 @@ def get_response_headers(code, body):
 
 def listen_to_client(client, address):
     size = 2048  # Typical header sizes are 700-800 bytes, up to 2kB, ref:
-    # https://stackoverflow.com/questions/5358109/what-is-the-average-size-of-an-http-request-response-header
+    # https://dev.chromium.org/spdy/spdy-whitepaper
     while True:
         try:
             data = client.recv(size)
@@ -94,13 +112,17 @@ def listen_to_client(client, address):
             if data:
                 #  Handle HTTP requests accordingly, partially based on:
                 #  http://blog.wachowicz.eu/?p=256
-                request = data.decode('utf-8')  # TODO: change decoding for images with PUT / POST request?
+                request = data.decode('utf-8')
                 request_type = request.split()[0]
                 print("Detected ", request_type, " request.")
 
                 path = request.split()[1]
-                response_body, response_code = get_get_response(path, request_type)
+                response_body, response_code = get_get_response(path)
+                if "Host:" not in request:
+                    response_body = get_400_page()
+                    response_code = 400
                 response_header = get_response_headers(response_code, response_body)
+
                 if request_type == 'GET':
                     client.sendall(response_header.encode('ascii') + response_body)
                 elif request_type == 'HEAD':
@@ -117,7 +139,6 @@ def listen_to_client(client, address):
                     print(response_header)
 
             else:
-                # raise Exception('Client disconnected')
                 print("Client: ", address[0], " disconnected.")
                 break
         except IOError:
@@ -125,8 +146,17 @@ def listen_to_client(client, address):
             return False
 
 
+def graceful_shutdown(sig, dummy):
+    """Handle keyboard interrupt
+    :param sig: The keyboard interrupt
+    :param dummy: A dummy variable to match the required signature
+    """
+    sys.exit(1)
+
+
 # This is based on:
 # https://stackoverflow.com/questions/23828264/how-to-make-a-simple-multithreaded-socket-server-in-python-that-remembers-client
+
 class ThreadedServer:
     def __init__(self, port):
         self.port = port
@@ -138,18 +168,20 @@ class ThreadedServer:
         except PermissionError:
             print("Please enter a port number larger than 1024.")
             exit()
-        print("Hosting at: ", self.host, ":", self.port)
+        host_location = (str(self.host) + ":" + str(self.port)).replace(" ", "")
+        print("Hosting at: ", host_location)
 
     def listen(self):
         self.sock.listen(5)  # Max number of queued connections
         while True:
             client, address = self.sock.accept()
-            # client.settimeout(60)
+            client.settimeout(60)
             threading.Thread(target=listen_to_client, args=(client, address)).start()
             print("[NEW CONNECTION] Connected to client: ", address[0])
 
 
 if __name__ == "__main__":
-    # port_num = ask_port()
+    signal.signal(signal.SIGINT, graceful_shutdown)
     port_num = 1234
-    ThreadedServer(port_num).listen()
+    s = ThreadedServer(port_num)
+    s.listen()

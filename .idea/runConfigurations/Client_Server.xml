@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Client&amp;Server" type="CompoundRunConfigurationType">
+    <toRun name="client2" type="PythonConfigurationType" />
+    <toRun name="server2" type="PythonConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

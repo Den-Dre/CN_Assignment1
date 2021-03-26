@@ -1,0 +1,16 @@
+#!/bin/bash
+
+sites=(
+  www.google.com
+  www.example.com
+  www.tcpipguide.com
+  www.linux-ip.net
+  www.tinyos.net
+  www.jmarshall.com
+  www.tldp.org
+)
+
+for site in "${sites[@]}"; do
+  python3 ../src/client.py GET "$site" 80
+  firefox ../out/index.html
+done

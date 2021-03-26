@@ -10,20 +10,6 @@ import dateutil
 from datetime import datetime
 
 
-# TODO:
-#  redirect if not https ✓
-#  500 code only thrown when server crashes, not with bad request ✓
-#  Arguments to program should be given when program's called, only body of PUT/POST request should be interactive ✓
-#  Http:// moet er ook nog bij kunnen ✓
-#  Redirects bij code 301 volgen ✓
-#  Fix: afbeelding soms niet volledig geladen (Google logo) ✓
-#  Fix: afbeeldingen met src='volledige http uri' kunnen niet laden ✓
-#  If-Modified-Since header: Fix date format ✓
-#  Documentation in server.py ✓
-#  Refactor file names and delete old files
-#  recv()-calls met verschil van to receive lengte doen werken.
-
-
 def get_ipv4():
     """ A method to retrieve the local IPv4-address of the machine.
 
@@ -231,6 +217,9 @@ def get_if_modified_since_date(request):
 def listen_to_client(client, address):
     """ Listen for HTTP requests of a client.
 
+    partially based on:
+    http://blog.wachowicz.eu/?p=256
+
     :param client: The client that will be listened to to receive its HTTP requests.
     :param address: The address of this client.
     """
@@ -243,8 +232,6 @@ def listen_to_client(client, address):
             data = client.recv(size)
             print('[RECEIVED DATA] ', data.decode('utf-8'))
             if data:
-                #  Handle HTTP requests accordingly, partially based on:
-                #  http://blog.wachowicz.eu/?p=256
                 request = data.decode('utf-8')
                 request_type = request.split()[0]
                 print("Detected ", request_type, " request.")

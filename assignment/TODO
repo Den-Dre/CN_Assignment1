@@ -1,0 +1,13 @@
+### TODO:
+-  Redirect if not https ✓
+-  500 code only thrown when server crashes, not with bad request ✓
+-  Arguments to program should be given when program's called, only body of PUT/POST request should be interactive ✓
+-  Http:// moet er ook nog bij kunnen ✓
+-  Redirects bij code 301 volgen ✓
+-  Fix: afbeelding soms niet volledig geladen (Google logo) ✓
+-  Fix: afbeeldingen met src='volledige http uri' kunnen niet laden ✓
+-  If-Modified-Since header: Fix date format ✓
+-  Documentation in server.py ✓
+-  Refactor file names and delete old files ✓
+-  recv()-calls met verschil van to receive te ontvangen lengte doen werken. ✓
+

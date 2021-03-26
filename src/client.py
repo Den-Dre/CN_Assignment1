@@ -19,7 +19,11 @@ def get_ipv4():
 
 
 def get_image_urls(soup):
-    """Retrieve the src-attributes of all img-objects in the given soup html object"""
+    """Retrieve the src-attributes of all img-objects in the given soup html object
+
+    Based on:
+    https://www.thepythoncode.com/article/download-web-page-images-python
+    """
 
     img_urls = []
     for img in soup.find_all("img"):
@@ -27,7 +31,6 @@ def get_image_urls(soup):
         if img_url:
             img_urls.append(img_url)
     return img_urls
-    # Based on: https://www.thepythoncode.com/article/download-web-page-images-python
 
 
 def parse_uri(uri):
@@ -127,12 +130,8 @@ class MyClient:
         and modify the html code accordingly
         """
 
-        # soup = bs(self.body, "html.parser")
-        # self.save_images(soup)
         with open(os.sep.join(['..', 'out', 'index.html']), 'w') as f:
             try:
-                # f.write(str(soup))
-                # f.write(self.body.decode('ISO-8859-1'))
                 f.write(self.body.decode('ISO-8859-1'))
             except IOError:
                 print("ERROR: couldn't write body to file")
@@ -145,11 +144,14 @@ class MyClient:
         """
 
         self.body = body_start
-        # for i in range((length_to_receive // 2048) + 1):
-        #     part = self.client.recv(2048)
-        #     self.body += part
-        for i in range(length_to_receive):
-            self.body += self.client.recv(1)
+        while length_to_receive > 0:
+            part = self.client.recv(2048)
+            self.body += part
+            length_to_receive -= len(part)
+
+        # Inefficient alternative: receive byte by byte:
+        # for i in range(length_to_receive):
+        #     self.body += self.client.recv(1)
         self.save_body()
 
     def receive_chunks(self, start_of_body):
@@ -242,10 +244,15 @@ class MyClient:
         """
 
         body = body_start
-        # for i in range(ceil((total_length - len(body_start)) / 2048)):
-        #     body += self.client.recv(2048)
-        for i in range(total_length - len(body_start)):
-            body += self.client.recv(1)
+        length_to_receive = total_length - len(body_start)
+        while length_to_receive > 0:
+            part = self.client.recv(2048)
+            body += part
+            length_to_receive -= len(part)
+
+        # Inefficient alternative: receive byte by byte:
+        # for i in range(total_length - len(body_start)):
+        #     body += self.client.recv(1)
         with open(f'..{os.sep}out{os.sep}{name.split("/")[-1]}', 'w+b') as f:
             f.write(body)
 
@@ -289,8 +296,6 @@ class MyClient:
                 self.receive_img_chunks(body_received, name)
                 return
             else:  # Header not yet completely processed OR Error code
-                # prev_response = response
-                # receive_image(name, response)
                 print('Error: couldn\'t receive image: ', name)
                 raise IOError(f"Header not completely processed, while processing {name}")
 
@@ -319,7 +324,7 @@ class MyClient:
         request += f"Host: {self.URI}\r\n"
         # request += f"If-Modified-Since: 2022-03-25T15:12:00\r\n"
         if request_type in ['POST', 'PUT']:
-            request += f"Content-Length: {str(len(contents))}\r\n"  # "\r\n"
+            request += f"Content-Length: {str(len(contents))}\r\n"
             request += "\r\n"
             request += contents + "\r\n"
         request += "\r\n"

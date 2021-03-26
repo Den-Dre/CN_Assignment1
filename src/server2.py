@@ -5,6 +5,8 @@ import socket
 import sys
 import threading
 import time
+import dateutil.parser
+import dateutil
 from datetime import datetime
 
 # TODO:
@@ -15,7 +17,7 @@ from datetime import datetime
 #  Redirects bij code 301 volgen ✓
 #  Fix: afbeelding soms niet volledig geladen (Google logo) ✓
 #  Fix: afbeeldingen met src='volledige http uri' kunnen niet laden ✓
-#  If-Modified-Since header: Fix date format
+#  If-Modified-Since header: Fix date format ✓
 #  recv()-calls met verschil van to receive lengte doen werken.
 
 
@@ -44,13 +46,18 @@ def get_400_page():
 
 
 def get_modified_date(file_name):
-    pass
+    with open(os.path.join('..', 'myHTMLpage', 'lastModifiedDates')) as f:
+        data = json.load(f)
+        datetime_format = "%Y-%m-%d %H:%M:%S"
+        return datetime.strptime(data[file_name], datetime_format)
 
 
 def get_get_response(path):
     if path == '/':
+        # path_to_read = os.path.join('..', 'myHTMLpage', 'myHTMLpage.html')
         path_to_read = os.sep.join(['..', 'myHTMLpage', 'myHTMLpage.html'])
     else:
+        # path_to_read = os.path.join('..', 'myHTMLpage', path)
         path_to_read = os.sep.join(['..', 'myHTMLpage', path])
     try:
         with open(path_to_read, 'rb') as f:  # 'rb': read in binary mode
@@ -60,23 +67,23 @@ def get_get_response(path):
 
 
 def handle_post(data):
-    rel_dir = data.split()[1]
+    rel_dir = data.split()[1][1:]
     file_name = rel_dir.split('/')[-1]
     string = data.split('\r\n\r\n')[1].rstrip()
 
     try:
         # Store Last-Modified date
-        with open('..' + os.sep + 'myHTMLpage' + os.sep + 'lastModifiedDates') as f:
+        with open(os.path.join('..', 'myHTMLpage', 'lastModifiedDates'), 'r') as f:
             data = json.load(f)
-            data[file_name] = datetime.now().replace(microsecond=0).isoformat()
-        with open('..' + os.sep + 'myHTMLpage' + os.sep + 'lastModifiedDates', 'w') as f:
-            f.write(json.dumps(data, indent=4))
+            data[file_name] = datetime.now().replace(microsecond=0)
+        with open(os.path.join('..', 'myHTMLpage', 'lastModifiedDates'), 'w') as f:
+            f.write(json.dumps(data, indent=1, default=my_converter))
     except IOError:
         print("Couldn't write Last-Modified date for file: ", rel_dir)
 
     try:
         # Append contents to file
-        with open('..' + os.sep + 'myHTMLpage' + rel_dir, 'a+') as f:
+        with open(os.path.join('..', 'myHTMLpage', rel_dir), 'a+') as f:
             f.write(string)
             return 200, string
     except IOError:
@@ -87,7 +94,7 @@ def handle_post(data):
 def handle_put(data):
     rel_dir = data.split()[1]
     string = data.split('\r\n\r\n')[1].rstrip()
-    with open('..' + os.sep + 'myHTMLpage' + rel_dir, 'w') as f:
+    with open(os.path.join('..', 'myHTMLpage', rel_dir), 'w') as f:
         try:
             f.write(string)
             return 200, string
@@ -116,10 +123,28 @@ def get_response_headers(code, body):
     return header + '\r\n'
 
 
-def get_if_modified_since(request):
+def my_parse_date(text):
+    # return datetime(*eut.parsedate(text)[:6])
+    return dateutil.parser.isoparse(text)
+
+
+def my_converter(o):
+    """
+    Convert a datetime object to a string to be
+    able to write it to a JSON file.
+    Reference: https://code-maven.com/serialize-datetime-object-as-json-in-python
+
+    :param o: The datetime object
+    :return: A string representation of parameter o
+    """
+    if isinstance(o, datetime):
+        return o.__str__()
+
+
+def get_if_modified_since_date(request):
     for line in request.split('\r\n'):
         if "If-Modified-Since" in line:
-            return line.split()[1:]
+            return my_parse_date(''.join(line.split()[1:]))
 
 
 def listen_to_client(client, address):
@@ -143,13 +168,12 @@ def listen_to_client(client, address):
                     response_code = 400
                 response_header = get_response_headers(response_code, response_body)
 
+                if "If-Modified-Since" in request and request_type in ['GET', 'HEAD']:
+                    file_name = 'myHTMLpage' if path == '/' else path.split('/')[-1]
+                    if get_modified_date(file_name) < get_if_modified_since_date(request):
+                        client.sendall(get_response_headers(304, "").encode('ascii'))
+                        return
                 if request_type == 'GET':
-                    if "If-Modified-Since" in request:
-                        if_modified_since_date = get_if_modified_since(request)
-                        file_name = path.split('/')[-1]
-                        if get_modified_date(file_name) < if_modified_since_date:
-                            client.sendall(get_response_headers(304, ""))
-                            return
                     client.sendall(response_header.encode('ascii') + response_body)
                 elif request_type == 'HEAD':
                     client.sendall(response_header.encode('ascii'))

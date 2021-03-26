@@ -99,7 +99,8 @@ class MyClient:
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         # Compose complete HTTP request
-        self.request = f"{self.REQUEST_TYPE} {self.REL_PATH} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n"
+        # self.request = f"{self.REQUEST_TYPE} {self.REL_PATH} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n"
+        self.request = self.compose_request(self.REQUEST_TYPE, self.REL_PATH, "")
 
         # Connect to given URI
         self.client.connect((self.URI, self.PORT))
@@ -226,7 +227,7 @@ class MyClient:
             self.receive_image(url)
 
             # Replace src attribute
-            body = body.replace(url, url.split('/')[-1])
+            body = body.replace(url, os.sep.join(['..', 'out', url.split('/')[-1]]))
 
         # Write updated body
         with open(os.sep.join(['..', 'out', 'index.html']), 'w') as f:
@@ -262,7 +263,8 @@ class MyClient:
             prev_resp = resp
             resp = self.client.recv(2048)
             body += resp
-        with open(f'{os.getcwd()}{os.sep}out{os.sep}{name.split("/")[-1]}', 'w+b') as f:
+        # with open(f'{os.getcwd()}{os.sep}out{os.sep}{name.split("/")[-1]}', 'w+b') as f:
+        with open(os.sep.join(['..', 'out', f'{name.split("/")[-1]}']), 'w+b') as f:
             f.write(body)
 
     def receive_image(self, name):
@@ -315,9 +317,12 @@ class MyClient:
 
         request = f"{request_type} {rel_dir} HTTP/1.1\r\n"
         request += f"Host: {self.URI}\r\n"
-        request += f"Content-Length: {str(len(contents))}\r\n\r\n"  # "\r\n"
-        request += f"If-Modified-Since: 2021-03-25T15:12:00"
-        request += contents + "\r\n"
+        # request += f"If-Modified-Since: 2022-03-25T15:12:00\r\n"
+        if request_type in ['POST', 'PUT']:
+            request += f"Content-Length: {str(len(contents))}\r\n"  # "\r\n"
+            request += "\r\n"
+            request += contents + "\r\n"
+        request += "\r\n"
         return request
 
     def send_post(self):

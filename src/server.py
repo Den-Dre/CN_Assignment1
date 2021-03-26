@@ -9,6 +9,7 @@ import dateutil.parser
 import dateutil
 from datetime import datetime
 
+
 # TODO:
 #  redirect if not https ✓
 #  500 code only thrown when server crashes, not with bad request ✓
@@ -106,6 +107,8 @@ def update_last_modified(file_name, rel_dir):
         # Update Last-Modified date
         with open(os.path.join('..', 'myHTMLpage', 'lastModifiedDates'), 'r') as f:
             data = json.load(f)
+            if file_name not in data.keys():
+                data.update({file_name: ""})
             data[file_name] = datetime.now().replace(microsecond=0)
         with open(os.path.join('..', 'myHTMLpage', 'lastModifiedDates'), 'w') as f:
             f.write(json.dumps(data, indent=1, default=my_converter))
@@ -120,9 +123,11 @@ def handle_post(data):
     :return: Two values: the HTTP response code, and the appended string.
     """
 
-    rel_dir = data.split()[1][1:]
+    rel_dir = data.split()[1]
     file_name = rel_dir.split('/')[-1]
     string = data.split('\r\n\r\n')[1].rstrip()
+    if rel_dir.startswith('/'):
+        rel_dir = rel_dir[1:]
 
     # Update the Last-Modified field of the given file.
     update_last_modified(file_name, rel_dir)
@@ -144,7 +149,13 @@ def handle_put(data):
     :return: Two values: the HTTP status code and the string that was PUT.
     """
     rel_dir = data.split()[1]
+    file_name = rel_dir.split('/')[-1]
     string = data.split('\r\n\r\n')[1].rstrip()
+    if rel_dir.startswith('/'):
+        rel_dir = rel_dir[1:]
+
+    update_last_modified(file_name, rel_dir)
+
     with open(os.path.join('..', 'myHTMLpage', rel_dir), 'w') as f:
         try:
             f.write(string)

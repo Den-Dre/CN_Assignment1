@@ -345,7 +345,9 @@ class MyClient:
 
 
 if __name__ == '__main__':
-    """Set the working directory, create and run a client."""
+    """
+    Set the working directory, create and run the client.
+    """
 
     os.chdir(pathlib.Path(__file__).parent.absolute())
     try:

@@ -317,7 +317,7 @@ class ThreadedServer:
         self.sock.listen(5)
         while True:
             client, address = self.sock.accept()
-            client.settimeout(60)
+            client.settimeout(3)
             threading.Thread(target=listen_to_client, args=(client, address)).start()
             print("[NEW CONNECTION] Connected to client: ", address[0])
 

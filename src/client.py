@@ -30,6 +30,11 @@ def get_image_urls(soup):
         img_url = img.attrs.get("src")
         if img_url:
             img_urls.append(img_url)
+
+        # Also retrieve version of image to show when mouse hovers over it (e.g.: www.tcpipguide.com)
+        img_low_url = img.attrs.get("lowsrc")
+        if img_low_url:
+            img_urls.append(img_low_url)
     return img_urls
 
 
@@ -215,7 +220,7 @@ class MyClient:
         soup = bs(body, 'html.parser')
         img_urls = get_image_urls(soup)
         for url in img_urls:
-            print(url)
+            print('Fetching image at: ', url)
             if 'www' in url and self.URI not in url:
                 # Handle external images with separate GET-request
                 image_client = MyClient('GET', url, 80)
@@ -287,7 +292,7 @@ class MyClient:
                     if b"Content-Length:" in line:
                         total_length_body = int(line.split()[1])
                         body_received = response.split(b"\r\n\r\n")[1]
-                        print("Image length: ", total_length_body)
+                        # print("Image length: ", total_length_body)
                         self.receive_img_length(total_length_body, body_received, name)
                         return
                 raise IOError("Expected Content-Length header.")

@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>Assignment1.src.client API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>Assignment1.src.client</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import glob
+import os
+import pathlib
+import socket
+import sys
+from bs4 import BeautifulSoup as bs
+
+
+def get_ipv4():
+    &#34;&#34;&#34; A method to retrieve the local IPv4-address of the machine.
+
+    Works by connecting a socket to the DNS server of Google on port 80 and
+    extracting the IPv4-address out of the the obtained name of the socket.
+    &#34;&#34;&#34;
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect((&#34;8.8.8.8&#34;, 80))
+    return s.getsockname()[0]
+
+
+def get_image_urls(soup):
+    &#34;&#34;&#34;Retrieve the src-attributes of all img-objects in the given soup html object
+
+    Based on:
+    https://www.thepythoncode.com/article/download-web-page-images-python
+    &#34;&#34;&#34;
+
+    img_urls = []
+    for img in soup.find_all(&#34;img&#34;):
+        img_url = img.attrs.get(&#34;src&#34;)
+        if img_url:
+            img_urls.append(img_url)
+    return img_urls
+
+
+def parse_uri(uri):
+    &#34;&#34;&#34;Handle different input forms of the user-input uri.
+
+    :param uri: The uri to be parsed
+    :return: the uri extracted from the input,
+    along with the possible relative path of the requested file located on this uri.
+    &#34;&#34;&#34;
+
+    trimmed_uri = uri
+    if &#39;http:&#39; in uri:
+        trimmed_uri = uri.split(&#34;http://&#34;)[1]
+    elif &#39;https:&#39; in uri:
+        raise NotImplemented(&#39;Https is not supported.&#39;)
+    base_uri = trimmed_uri.split(&#39;/&#39;)[0]
+    rel_path = trimmed_uri[len(base_uri):]
+    if rel_path == &#39;&#39;:
+        rel_path = &#39;/&#39;
+    return base_uri, rel_path
+
+
+def handle_moved_permanently(response):
+    &#34;&#34;&#34; Handle a &#34;301 Moved permanently&#34; redirect
+    :param response: The &#34;301 Moved permanently&#34; response to be handled.
+    &#34;&#34;&#34;
+
+    if b&#34;https:&#34; in response:
+        print(&#34;Https redirects not supported.&#34;)
+    elif b&#34;http:&#34; in response:
+        soup = bs(response, &#34;html.parser&#34;)
+        for a in soup.find_all(&#34;a&#34;):
+            new_uri = a.attrs.get(&#34;href&#34;)
+            new_client = MyClient(&#39;GET&#39;, new_uri, 80)
+            new_client.handle_request()
+
+
+def clear_directory():
+    files = &#39;../out/*&#39;
+    r = glob.glob(files)
+    for i in r:
+        os.remove(i)
+
+
+class MyClient:
+    &#34;&#34;&#34;
+    A class to represent a socket client that can execute certain
+    HTTP-requests on provided uri&#39;s on a provided port.
+    &#34;&#34;&#34;
+
+    def __init__(self, request_type, uri, port):
+        &#34;&#34;&#34; Initialise this client with the given parameters.
+
+        :param request_type: The type of HTTP-request to be performed
+        :param uri: The URI to be connected to.
+        :param port: The port to be connected to.
+        &#34;&#34;&#34;
+
+        self.HOST = get_ipv4()
+        self.PORT = int(port)
+        self.REQUEST_TYPE = request_type
+        self.URI, self.REL_PATH = parse_uri(uri)
+        self.ADDR = (self.HOST, self.PORT)
+        self.FORMAT = &#39;utf-8&#39;
+        self.HEADER = 100
+        self.body = b&#34;&#34;
+        self.header = b&#34;&#34;
+
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        # Compose complete HTTP request
+        # self.request = f&#34;{self.REQUEST_TYPE} {self.REL_PATH} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
+        self.request = self.compose_request(self.REQUEST_TYPE, self.REL_PATH, &#34;&#34;)
+
+        # Connect to given URI
+        self.client.connect((self.URI, self.PORT))
+
+    def handle_request(self):
+        &#34;&#34;&#34; Handle the given HTTP-request.&#34;&#34;&#34;
+
+        if self.REQUEST_TYPE == &#39;GET&#39;:
+            clear_directory()
+            self.client.sendall(self.request.encode(&#39;ascii&#39;))
+            self.receive_body()
+            self.save_images()
+        elif self.REQUEST_TYPE == &#39;HEAD&#39;:
+            self.client.sendall(self.request.encode(&#39;ascii&#39;))
+            self.receive_header()
+        elif self.REQUEST_TYPE == &#39;POST&#39;:
+            self.send_post()
+        elif self.REQUEST_TYPE == &#39;PUT&#39;:
+            self.send_put()
+
+    def save_body(self):
+        &#34;&#34;&#34;
+        Save the body, fetch the images present on the site
+        and modify the html code accordingly
+        &#34;&#34;&#34;
+
+        with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;w&#39;) as f:
+            try:
+                f.write(self.body.decode(&#39;ISO-8859-1&#39;))
+            except IOError:
+                print(&#34;ERROR: couldn&#39;t write body to file&#34;)
+
+    def receive_length(self, length_to_receive, body_start):
+        &#34;&#34;&#34; Receive the body of the uri in the case of Content-Length encoding.
+
+        :param length_to_receive: The remaining length of the body to be received
+        :param body_start: The part of the body that has already been received.
+        &#34;&#34;&#34;
+
+        self.body = body_start
+        while length_to_receive &gt; 0:
+            part = self.client.recv(2048)
+            self.body += part
+            length_to_receive -= len(part)
+
+        # Inefficient alternative: receive byte by byte:
+        # for i in range(length_to_receive):
+        #     self.body += self.client.recv(1)
+        self.save_body()
+
+    def receive_chunks(self, start_of_body):
+        &#34;&#34;&#34; Receive the body of the uri in the case of Chunked encoding.
+
+        :param start_of_body: The part of the body that has already been received.
+        &#34;&#34;&#34;
+
+        self.body = start_of_body
+        prev_resp = b&#34;&#34;
+        resp = self.client.recv(1024)
+        while b&#34;0\r\n\r\n&#34; not in prev_resp + resp:
+            prev_resp = resp
+            resp = self.client.recv(1024)
+            self.body += resp
+        self.save_body()
+
+    def receive_body(self):
+        &#34;&#34;&#34; Receive the body part of the html code of the uri.
+
+        This implementation is based on the researched assumption
+        that the length of a GET-response header ranges from 700-
+        800 bytes to 2kB.
+        Source: https://dev.chromium.org/spdy/spdy-whitepaper
+        &#34;&#34;&#34;
+
+        response = self.client.recv(2048)
+        if b&#34;301 Moved Permanently&#34; in response:
+            handle_moved_permanently(response)
+        if b&#34;Content-Length:&#34; in response:
+            for line in response.split(b&#39;\r\n&#39;):
+                if b&#34;Content-Length:&#34; in line:
+                    total_length_body = int(line.split()[1])
+                    self.header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+                    print(self.header.decode(&#39;utf-8&#39;) + &#34;\r\n&#34;)
+                    self.receive_length(total_length_body - len(body_received), body_received)
+                    return
+        elif b&#34;Transfer-Encoding: chunked&#34; in response:
+            self.header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+            print(self.header.decode(&#39;utf-8&#39;) + &#34;\r\n&#34;)
+            self.receive_chunks(body_received)
+            return
+        else:  # Header not yet completely processed
+            raise IOError(&#34;Header not completely processed.&#34;)
+
+    def save_images(self):
+        &#34;&#34;&#34;
+        Iterate through all the img-objects in this HTML file
+        and fetch each of them with a seperate GET-request.
+
+        Finally, the src-attributes of this HTML file are
+        modified to the local location of the fetched images.
+
+        The results are written to index.html
+        &#34;&#34;&#34;
+
+        # Read in saved body of GET request
+        with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;r&#39;) as f:
+            body = f.read()
+
+        soup = bs(body, &#39;html.parser&#39;)
+        img_urls = get_image_urls(soup)
+        for url in img_urls:
+            print(url)
+            if &#39;www&#39; in url and self.URI not in url:
+                # Handle external images with separate GET-request
+                image_client = MyClient(&#39;GET&#39;, url, 80)
+                image_client.handle_request()
+                continue
+            elif str(url).startswith(&#39;/&#39;):
+                request = f&#34;\r\nGET {url} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
+            else:
+                request = f&#34;\r\nGET /{url} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
+            self.client.sendall(request.encode(&#39;ascii&#39;))
+            self.receive_image(url)
+
+            # Replace src attribute
+            body = body.replace(url, os.sep.join([&#39;..&#39;, &#39;out&#39;, url.split(&#39;/&#39;)[-1]]))
+
+        # Write updated body
+        with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;w&#39;) as f:
+            f.write(body)
+
+    def receive_img_length(self, total_length, body_start, name):
+        &#34;&#34;&#34;Receive an an image whose length is specified with Content-Length encoding.
+
+        :param total_length: The Content-Length value of this image.
+        :param body_start: The part of this image that has already been received.
+        :param name: The name that will be given to this image.
+        &#34;&#34;&#34;
+
+        body = body_start
+        length_to_receive = total_length - len(body_start)
+        while length_to_receive &gt; 0:
+            part = self.client.recv(2048)
+            body += part
+            length_to_receive -= len(part)
+
+        # Inefficient alternative: receive byte by byte:
+        # for i in range(total_length - len(body_start)):
+        #     body += self.client.recv(1)
+        with open(f&#39;..{os.sep}out{os.sep}{name.split(&#34;/&#34;)[-1]}&#39;, &#39;w+b&#39;) as f:
+            f.write(body)
+
+    def receive_img_chunks(self, body_received, name):
+        &#34;&#34;&#34;Receive an an image whose length is specified with Chunked encoding.
+
+        :param body_received: The part of this image that has already been received.
+        :param name: The name that will be given to this image.
+        &#34;&#34;&#34;
+
+        body = body_received
+        prev_resp = b&#34;&#34;
+        resp = self.client.recv(2048)
+        while b&#34;0\r\n\r\n&#34; not in prev_resp + resp:
+            prev_resp = resp
+            resp = self.client.recv(2048)
+            body += resp
+        # with open(f&#39;{os.getcwd()}{os.sep}out{os.sep}{name.split(&#34;/&#34;)[-1]}&#39;, &#39;w+b&#39;) as f:
+        with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, f&#39;{name.split(&#34;/&#34;)[-1]}&#39;]), &#39;w+b&#39;) as f:
+            f.write(body)
+
+    def receive_image(self, name):
+        &#34;&#34;&#34; Receive an image using a GET-request
+
+        :param name: The name that will be given to the fetched image.
+        based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
+        &#34;&#34;&#34;
+        while True:
+            response = self.client.recv(2048)
+            if b&#34;Content-Length:&#34; in response:
+                for line in response.split(b&#39;\r\n&#39;):
+                    if b&#34;Content-Length:&#34; in line:
+                        total_length_body = int(line.split()[1])
+                        body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
+                        print(&#34;Image length: &#34;, total_length_body)
+                        self.receive_img_length(total_length_body, body_received, name)
+                        return
+                raise IOError(&#34;Expected Content-Length header.&#34;)
+            elif b&#34;Transfer-Encoding: chunked&#34; in response:
+                body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
+                self.receive_img_chunks(body_received, name)
+                return
+            else:  # Header not yet completely processed OR Error code
+                print(&#39;Error: couldn\&#39;t receive image: &#39;, name)
+                raise IOError(f&#34;Header not completely processed, while processing {name}&#34;)
+
+    def receive_header(self):
+        &#34;&#34;&#34;Receive the header of the given URI and print it to the terminal.
+
+        Average header size turns out to be approx. 700-800 bytes, up to 2kB.
+        source: https://dev.chromium.org/spdy/spdy-whitepaper
+        &#34;&#34;&#34;
+
+        self.header = self.client.recv(2048)
+        print(&#39;Resulting HEAD response:&#39;)
+        print(self.header.decode(&#39;utf-8&#39;))
+
+    def compose_request(self, request_type, rel_dir, contents):
+        &#34;&#34;&#34;
+        Compose a HTTP-request of the given request_type.
+
+        :param request_type: The type of request to be composed.
+        :param rel_dir: The relative directory to be placed in this request.
+        :param contents: The contents for a PUT/POST-request to be sent.
+        :return: The complete request.
+        &#34;&#34;&#34;
+
+        request = f&#34;{request_type} {rel_dir} HTTP/1.1\r\n&#34;
+        request += f&#34;Host: {self.URI}\r\n&#34;
+        # request += f&#34;If-Modified-Since: 2022-03-25T15:12:00\r\n&#34;
+        if request_type in [&#39;POST&#39;, &#39;PUT&#39;]:
+            request += f&#34;Content-Length: {str(len(contents))}\r\n&#34;
+            request += &#34;\r\n&#34;
+            request += contents + &#34;\r\n&#34;
+        request += &#34;\r\n&#34;
+        return request
+
+    def send_post(self):
+        &#34;&#34;&#34;Send a POST request with the given contents. &#34;&#34;&#34;
+
+        contents = input(&#34;String to POST to file on server: &#34;)
+        request = self.compose_request(&#39;POST&#39;, self.REL_PATH, contents)
+        self.client.sendall(request.encode(&#39;ascii&#39;))
+        self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
+        print(self.header, &#39;\n&#39;)
+
+    def send_put(self):
+        &#34;&#34;&#34;Send a PUT request with the given contents. &#34;&#34;&#34;
+
+        contents = input(&#39;String to PUT to file on server: &#39;)
+        request = self.compose_request(&#39;PUT&#39;, self.REL_PATH, contents)
+        self.client.sendall(request.encode(&#39;ascii&#39;))
+        self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
+        print(self.header, &#39;\n&#39;)
+
+
+if __name__ == &#39;__main__&#39;:
+    &#34;&#34;&#34;
+    Set the working directory, create and run the client.
+    &#34;&#34;&#34;
+
+    os.chdir(pathlib.Path(__file__).parent.absolute())
+    try:
+        client = MyClient(sys.argv[1], sys.argv[2], sys.argv[3])
+    except IndexError:
+        print(&#39;Please give input of the form: client.py &lt;HTTP REQUEST TYPE&gt; &lt;URI&gt; &lt;PORT&gt;.&#39;)
+        sys.exit(0)
+    client.handle_request()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="Assignment1.src.client.clear_directory"><code class="name flex">
+<span>def <span class="ident">clear_directory</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clear_directory():
+    files = &#39;../out/*&#39;
+    r = glob.glob(files)
+    for i in r:
+        os.remove(i)</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.get_image_urls"><code class="name flex">
+<span>def <span class="ident">get_image_urls</span></span>(<span>soup)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieve the src-attributes of all img-objects in the given soup html object</p>
+<p>Based on:
+<a href="https://www.thepythoncode.com/article/download-web-page-images-python">https://www.thepythoncode.com/article/download-web-page-images-python</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_image_urls(soup):
+    &#34;&#34;&#34;Retrieve the src-attributes of all img-objects in the given soup html object
+
+    Based on:
+    https://www.thepythoncode.com/article/download-web-page-images-python
+    &#34;&#34;&#34;
+
+    img_urls = []
+    for img in soup.find_all(&#34;img&#34;):
+        img_url = img.attrs.get(&#34;src&#34;)
+        if img_url:
+            img_urls.append(img_url)
+    return img_urls</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.get_ipv4"><code class="name flex">
+<span>def <span class="ident">get_ipv4</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A method to retrieve the local IPv4-address of the machine.</p>
+<p>Works by connecting a socket to the DNS server of Google on port 80 and
+extracting the IPv4-address out of the the obtained name of the socket.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_ipv4():
+    &#34;&#34;&#34; A method to retrieve the local IPv4-address of the machine.
+
+    Works by connecting a socket to the DNS server of Google on port 80 and
+    extracting the IPv4-address out of the the obtained name of the socket.
+    &#34;&#34;&#34;
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect((&#34;8.8.8.8&#34;, 80))
+    return s.getsockname()[0]</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.handle_moved_permanently"><code class="name flex">
+<span>def <span class="ident">handle_moved_permanently</span></span>(<span>response)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Handle a "301 Moved permanently" redirect
+:param response: The "301 Moved permanently" response to be handled.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def handle_moved_permanently(response):
+    &#34;&#34;&#34; Handle a &#34;301 Moved permanently&#34; redirect
+    :param response: The &#34;301 Moved permanently&#34; response to be handled.
+    &#34;&#34;&#34;
+
+    if b&#34;https:&#34; in response:
+        print(&#34;Https redirects not supported.&#34;)
+    elif b&#34;http:&#34; in response:
+        soup = bs(response, &#34;html.parser&#34;)
+        for a in soup.find_all(&#34;a&#34;):
+            new_uri = a.attrs.get(&#34;href&#34;)
+            new_client = MyClient(&#39;GET&#39;, new_uri, 80)
+            new_client.handle_request()</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.parse_uri"><code class="name flex">
+<span>def <span class="ident">parse_uri</span></span>(<span>uri)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Handle different input forms of the user-input uri.</p>
+<p>:param uri: The uri to be parsed
+:return: the uri extracted from the input,
+along with the possible relative path of the requested file located on this uri.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_uri(uri):
+    &#34;&#34;&#34;Handle different input forms of the user-input uri.
+
+    :param uri: The uri to be parsed
+    :return: the uri extracted from the input,
+    along with the possible relative path of the requested file located on this uri.
+    &#34;&#34;&#34;
+
+    trimmed_uri = uri
+    if &#39;http:&#39; in uri:
+        trimmed_uri = uri.split(&#34;http://&#34;)[1]
+    elif &#39;https:&#39; in uri:
+        raise NotImplemented(&#39;Https is not supported.&#39;)
+    base_uri = trimmed_uri.split(&#39;/&#39;)[0]
+    rel_path = trimmed_uri[len(base_uri):]
+    if rel_path == &#39;&#39;:
+        rel_path = &#39;/&#39;
+    return base_uri, rel_path</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="Assignment1.src.client.MyClient"><code class="flex name class">
+<span>class <span class="ident">MyClient</span></span>
+<span>(</span><span>request_type, uri, port)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A class to represent a socket client that can execute certain
+HTTP-requests on provided uri's on a provided port.</p>
+<p>Initialise this client with the given parameters.</p>
+<p>:param request_type: The type of HTTP-request to be performed
+:param uri: The URI to be connected to.
+:param port: The port to be connected to.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MyClient:
+    &#34;&#34;&#34;
+    A class to represent a socket client that can execute certain
+    HTTP-requests on provided uri&#39;s on a provided port.
+    &#34;&#34;&#34;
+
+    def __init__(self, request_type, uri, port):
+        &#34;&#34;&#34; Initialise this client with the given parameters.
+
+        :param request_type: The type of HTTP-request to be performed
+        :param uri: The URI to be connected to.
+        :param port: The port to be connected to.
+        &#34;&#34;&#34;
+
+        self.HOST = get_ipv4()
+        self.PORT = int(port)
+        self.REQUEST_TYPE = request_type
+        self.URI, self.REL_PATH = parse_uri(uri)
+        self.ADDR = (self.HOST, self.PORT)
+        self.FORMAT = &#39;utf-8&#39;
+        self.HEADER = 100
+        self.body = b&#34;&#34;
+        self.header = b&#34;&#34;
+
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        # Compose complete HTTP request
+        # self.request = f&#34;{self.REQUEST_TYPE} {self.REL_PATH} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
+        self.request = self.compose_request(self.REQUEST_TYPE, self.REL_PATH, &#34;&#34;)
+
+        # Connect to given URI
+        self.client.connect((self.URI, self.PORT))
+
+    def handle_request(self):
+        &#34;&#34;&#34; Handle the given HTTP-request.&#34;&#34;&#34;
+
+        if self.REQUEST_TYPE == &#39;GET&#39;:
+            clear_directory()
+            self.client.sendall(self.request.encode(&#39;ascii&#39;))
+            self.receive_body()
+            self.save_images()
+        elif self.REQUEST_TYPE == &#39;HEAD&#39;:
+            self.client.sendall(self.request.encode(&#39;ascii&#39;))
+            self.receive_header()
+        elif self.REQUEST_TYPE == &#39;POST&#39;:
+            self.send_post()
+        elif self.REQUEST_TYPE == &#39;PUT&#39;:
+            self.send_put()
+
+    def save_body(self):
+        &#34;&#34;&#34;
+        Save the body, fetch the images present on the site
+        and modify the html code accordingly
+        &#34;&#34;&#34;
+
+        with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;w&#39;) as f:
+            try:
+                f.write(self.body.decode(&#39;ISO-8859-1&#39;))
+            except IOError:
+                print(&#34;ERROR: couldn&#39;t write body to file&#34;)
+
+    def receive_length(self, length_to_receive, body_start):
+        &#34;&#34;&#34; Receive the body of the uri in the case of Content-Length encoding.
+
+        :param length_to_receive: The remaining length of the body to be received
+        :param body_start: The part of the body that has already been received.
+        &#34;&#34;&#34;
+
+        self.body = body_start
+        while length_to_receive &gt; 0:
+            part = self.client.recv(2048)
+            self.body += part
+            length_to_receive -= len(part)
+
+        # Inefficient alternative: receive byte by byte:
+        # for i in range(length_to_receive):
+        #     self.body += self.client.recv(1)
+        self.save_body()
+
+    def receive_chunks(self, start_of_body):
+        &#34;&#34;&#34; Receive the body of the uri in the case of Chunked encoding.
+
+        :param start_of_body: The part of the body that has already been received.
+        &#34;&#34;&#34;
+
+        self.body = start_of_body
+        prev_resp = b&#34;&#34;
+        resp = self.client.recv(1024)
+        while b&#34;0\r\n\r\n&#34; not in prev_resp + resp:
+            prev_resp = resp
+            resp = self.client.recv(1024)
+            self.body += resp
+        self.save_body()
+
+    def receive_body(self):
+        &#34;&#34;&#34; Receive the body part of the html code of the uri.
+
+        This implementation is based on the researched assumption
+        that the length of a GET-response header ranges from 700-
+        800 bytes to 2kB.
+        Source: https://dev.chromium.org/spdy/spdy-whitepaper
+        &#34;&#34;&#34;
+
+        response = self.client.recv(2048)
+        if b&#34;301 Moved Permanently&#34; in response:
+            handle_moved_permanently(response)
+        if b&#34;Content-Length:&#34; in response:
+            for line in response.split(b&#39;\r\n&#39;):
+                if b&#34;Content-Length:&#34; in line:
+                    total_length_body = int(line.split()[1])
+                    self.header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+                    print(self.header.decode(&#39;utf-8&#39;) + &#34;\r\n&#34;)
+                    self.receive_length(total_length_body - len(body_received), body_received)
+                    return
+        elif b&#34;Transfer-Encoding: chunked&#34; in response:
+            self.header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+            print(self.header.decode(&#39;utf-8&#39;) + &#34;\r\n&#34;)
+            self.receive_chunks(body_received)
+            return
+        else:  # Header not yet completely processed
+            raise IOError(&#34;Header not completely processed.&#34;)
+
+    def save_images(self):
+        &#34;&#34;&#34;
+        Iterate through all the img-objects in this HTML file
+        and fetch each of them with a seperate GET-request.
+
+        Finally, the src-attributes of this HTML file are
+        modified to the local location of the fetched images.
+
+        The results are written to index.html
+        &#34;&#34;&#34;
+
+        # Read in saved body of GET request
+        with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;r&#39;) as f:
+            body = f.read()
+
+        soup = bs(body, &#39;html.parser&#39;)
+        img_urls = get_image_urls(soup)
+        for url in img_urls:
+            print(url)
+            if &#39;www&#39; in url and self.URI not in url:
+                # Handle external images with separate GET-request
+                image_client = MyClient(&#39;GET&#39;, url, 80)
+                image_client.handle_request()
+                continue
+            elif str(url).startswith(&#39;/&#39;):
+                request = f&#34;\r\nGET {url} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
+            else:
+                request = f&#34;\r\nGET /{url} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
+            self.client.sendall(request.encode(&#39;ascii&#39;))
+            self.receive_image(url)
+
+            # Replace src attribute
+            body = body.replace(url, os.sep.join([&#39;..&#39;, &#39;out&#39;, url.split(&#39;/&#39;)[-1]]))
+
+        # Write updated body
+        with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;w&#39;) as f:
+            f.write(body)
+
+    def receive_img_length(self, total_length, body_start, name):
+        &#34;&#34;&#34;Receive an an image whose length is specified with Content-Length encoding.
+
+        :param total_length: The Content-Length value of this image.
+        :param body_start: The part of this image that has already been received.
+        :param name: The name that will be given to this image.
+        &#34;&#34;&#34;
+
+        body = body_start
+        length_to_receive = total_length - len(body_start)
+        while length_to_receive &gt; 0:
+            part = self.client.recv(2048)
+            body += part
+            length_to_receive -= len(part)
+
+        # Inefficient alternative: receive byte by byte:
+        # for i in range(total_length - len(body_start)):
+        #     body += self.client.recv(1)
+        with open(f&#39;..{os.sep}out{os.sep}{name.split(&#34;/&#34;)[-1]}&#39;, &#39;w+b&#39;) as f:
+            f.write(body)
+
+    def receive_img_chunks(self, body_received, name):
+        &#34;&#34;&#34;Receive an an image whose length is specified with Chunked encoding.
+
+        :param body_received: The part of this image that has already been received.
+        :param name: The name that will be given to this image.
+        &#34;&#34;&#34;
+
+        body = body_received
+        prev_resp = b&#34;&#34;
+        resp = self.client.recv(2048)
+        while b&#34;0\r\n\r\n&#34; not in prev_resp + resp:
+            prev_resp = resp
+            resp = self.client.recv(2048)
+            body += resp
+        # with open(f&#39;{os.getcwd()}{os.sep}out{os.sep}{name.split(&#34;/&#34;)[-1]}&#39;, &#39;w+b&#39;) as f:
+        with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, f&#39;{name.split(&#34;/&#34;)[-1]}&#39;]), &#39;w+b&#39;) as f:
+            f.write(body)
+
+    def receive_image(self, name):
+        &#34;&#34;&#34; Receive an image using a GET-request
+
+        :param name: The name that will be given to the fetched image.
+        based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
+        &#34;&#34;&#34;
+        while True:
+            response = self.client.recv(2048)
+            if b&#34;Content-Length:&#34; in response:
+                for line in response.split(b&#39;\r\n&#39;):
+                    if b&#34;Content-Length:&#34; in line:
+                        total_length_body = int(line.split()[1])
+                        body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
+                        print(&#34;Image length: &#34;, total_length_body)
+                        self.receive_img_length(total_length_body, body_received, name)
+                        return
+                raise IOError(&#34;Expected Content-Length header.&#34;)
+            elif b&#34;Transfer-Encoding: chunked&#34; in response:
+                body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
+                self.receive_img_chunks(body_received, name)
+                return
+            else:  # Header not yet completely processed OR Error code
+                print(&#39;Error: couldn\&#39;t receive image: &#39;, name)
+                raise IOError(f&#34;Header not completely processed, while processing {name}&#34;)
+
+    def receive_header(self):
+        &#34;&#34;&#34;Receive the header of the given URI and print it to the terminal.
+
+        Average header size turns out to be approx. 700-800 bytes, up to 2kB.
+        source: https://dev.chromium.org/spdy/spdy-whitepaper
+        &#34;&#34;&#34;
+
+        self.header = self.client.recv(2048)
+        print(&#39;Resulting HEAD response:&#39;)
+        print(self.header.decode(&#39;utf-8&#39;))
+
+    def compose_request(self, request_type, rel_dir, contents):
+        &#34;&#34;&#34;
+        Compose a HTTP-request of the given request_type.
+
+        :param request_type: The type of request to be composed.
+        :param rel_dir: The relative directory to be placed in this request.
+        :param contents: The contents for a PUT/POST-request to be sent.
+        :return: The complete request.
+        &#34;&#34;&#34;
+
+        request = f&#34;{request_type} {rel_dir} HTTP/1.1\r\n&#34;
+        request += f&#34;Host: {self.URI}\r\n&#34;
+        # request += f&#34;If-Modified-Since: 2022-03-25T15:12:00\r\n&#34;
+        if request_type in [&#39;POST&#39;, &#39;PUT&#39;]:
+            request += f&#34;Content-Length: {str(len(contents))}\r\n&#34;
+            request += &#34;\r\n&#34;
+            request += contents + &#34;\r\n&#34;
+        request += &#34;\r\n&#34;
+        return request
+
+    def send_post(self):
+        &#34;&#34;&#34;Send a POST request with the given contents. &#34;&#34;&#34;
+
+        contents = input(&#34;String to POST to file on server: &#34;)
+        request = self.compose_request(&#39;POST&#39;, self.REL_PATH, contents)
+        self.client.sendall(request.encode(&#39;ascii&#39;))
+        self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
+        print(self.header, &#39;\n&#39;)
+
+    def send_put(self):
+        &#34;&#34;&#34;Send a PUT request with the given contents. &#34;&#34;&#34;
+
+        contents = input(&#39;String to PUT to file on server: &#39;)
+        request = self.compose_request(&#39;PUT&#39;, self.REL_PATH, contents)
+        self.client.sendall(request.encode(&#39;ascii&#39;))
+        self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
+        print(self.header, &#39;\n&#39;)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="Assignment1.src.client.MyClient.compose_request"><code class="name flex">
+<span>def <span class="ident">compose_request</span></span>(<span>self, request_type, rel_dir, contents)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compose a HTTP-request of the given request_type.</p>
+<p>:param request_type: The type of request to be composed.
+:param rel_dir: The relative directory to be placed in this request.
+:param contents: The contents for a PUT/POST-request to be sent.
+:return: The complete request.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compose_request(self, request_type, rel_dir, contents):
+    &#34;&#34;&#34;
+    Compose a HTTP-request of the given request_type.
+
+    :param request_type: The type of request to be composed.
+    :param rel_dir: The relative directory to be placed in this request.
+    :param contents: The contents for a PUT/POST-request to be sent.
+    :return: The complete request.
+    &#34;&#34;&#34;
+
+    request = f&#34;{request_type} {rel_dir} HTTP/1.1\r\n&#34;
+    request += f&#34;Host: {self.URI}\r\n&#34;
+    # request += f&#34;If-Modified-Since: 2022-03-25T15:12:00\r\n&#34;
+    if request_type in [&#39;POST&#39;, &#39;PUT&#39;]:
+        request += f&#34;Content-Length: {str(len(contents))}\r\n&#34;
+        request += &#34;\r\n&#34;
+        request += contents + &#34;\r\n&#34;
+    request += &#34;\r\n&#34;
+    return request</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.handle_request"><code class="name flex">
+<span>def <span class="ident">handle_request</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Handle the given HTTP-request.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def handle_request(self):
+    &#34;&#34;&#34; Handle the given HTTP-request.&#34;&#34;&#34;
+
+    if self.REQUEST_TYPE == &#39;GET&#39;:
+        clear_directory()
+        self.client.sendall(self.request.encode(&#39;ascii&#39;))
+        self.receive_body()
+        self.save_images()
+    elif self.REQUEST_TYPE == &#39;HEAD&#39;:
+        self.client.sendall(self.request.encode(&#39;ascii&#39;))
+        self.receive_header()
+    elif self.REQUEST_TYPE == &#39;POST&#39;:
+        self.send_post()
+    elif self.REQUEST_TYPE == &#39;PUT&#39;:
+        self.send_put()</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.receive_body"><code class="name flex">
+<span>def <span class="ident">receive_body</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receive the body part of the html code of the uri.</p>
+<p>This implementation is based on the researched assumption
+that the length of a GET-response header ranges from 700-
+800 bytes to 2kB.
+Source: <a href="https://dev.chromium.org/spdy/spdy-whitepaper">https://dev.chromium.org/spdy/spdy-whitepaper</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def receive_body(self):
+    &#34;&#34;&#34; Receive the body part of the html code of the uri.
+
+    This implementation is based on the researched assumption
+    that the length of a GET-response header ranges from 700-
+    800 bytes to 2kB.
+    Source: https://dev.chromium.org/spdy/spdy-whitepaper
+    &#34;&#34;&#34;
+
+    response = self.client.recv(2048)
+    if b&#34;301 Moved Permanently&#34; in response:
+        handle_moved_permanently(response)
+    if b&#34;Content-Length:&#34; in response:
+        for line in response.split(b&#39;\r\n&#39;):
+            if b&#34;Content-Length:&#34; in line:
+                total_length_body = int(line.split()[1])
+                self.header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+                print(self.header.decode(&#39;utf-8&#39;) + &#34;\r\n&#34;)
+                self.receive_length(total_length_body - len(body_received), body_received)
+                return
+    elif b&#34;Transfer-Encoding: chunked&#34; in response:
+        self.header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+        print(self.header.decode(&#39;utf-8&#39;) + &#34;\r\n&#34;)
+        self.receive_chunks(body_received)
+        return
+    else:  # Header not yet completely processed
+        raise IOError(&#34;Header not completely processed.&#34;)</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.receive_chunks"><code class="name flex">
+<span>def <span class="ident">receive_chunks</span></span>(<span>self, start_of_body)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receive the body of the uri in the case of Chunked encoding.</p>
+<p>:param start_of_body: The part of the body that has already been received.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def receive_chunks(self, start_of_body):
+    &#34;&#34;&#34; Receive the body of the uri in the case of Chunked encoding.
+
+    :param start_of_body: The part of the body that has already been received.
+    &#34;&#34;&#34;
+
+    self.body = start_of_body
+    prev_resp = b&#34;&#34;
+    resp = self.client.recv(1024)
+    while b&#34;0\r\n\r\n&#34; not in prev_resp + resp:
+        prev_resp = resp
+        resp = self.client.recv(1024)
+        self.body += resp
+    self.save_body()</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.receive_header"><code class="name flex">
+<span>def <span class="ident">receive_header</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receive the header of the given URI and print it to the terminal.</p>
+<p>Average header size turns out to be approx. 700-800 bytes, up to 2kB.
+source: <a href="https://dev.chromium.org/spdy/spdy-whitepaper">https://dev.chromium.org/spdy/spdy-whitepaper</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def receive_header(self):
+    &#34;&#34;&#34;Receive the header of the given URI and print it to the terminal.
+
+    Average header size turns out to be approx. 700-800 bytes, up to 2kB.
+    source: https://dev.chromium.org/spdy/spdy-whitepaper
+    &#34;&#34;&#34;
+
+    self.header = self.client.recv(2048)
+    print(&#39;Resulting HEAD response:&#39;)
+    print(self.header.decode(&#39;utf-8&#39;))</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.receive_image"><code class="name flex">
+<span>def <span class="ident">receive_image</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receive an image using a GET-request</p>
+<p>:param name: The name that will be given to the fetched image.
+based on: <a href="https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets">https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def receive_image(self, name):
+    &#34;&#34;&#34; Receive an image using a GET-request
+
+    :param name: The name that will be given to the fetched image.
+    based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
+    &#34;&#34;&#34;
+    while True:
+        response = self.client.recv(2048)
+        if b&#34;Content-Length:&#34; in response:
+            for line in response.split(b&#39;\r\n&#39;):
+                if b&#34;Content-Length:&#34; in line:
+                    total_length_body = int(line.split()[1])
+                    body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
+                    print(&#34;Image length: &#34;, total_length_body)
+                    self.receive_img_length(total_length_body, body_received, name)
+                    return
+            raise IOError(&#34;Expected Content-Length header.&#34;)
+        elif b&#34;Transfer-Encoding: chunked&#34; in response:
+            body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
+            self.receive_img_chunks(body_received, name)
+            return
+        else:  # Header not yet completely processed OR Error code
+            print(&#39;Error: couldn\&#39;t receive image: &#39;, name)
+            raise IOError(f&#34;Header not completely processed, while processing {name}&#34;)</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.receive_img_chunks"><code class="name flex">
+<span>def <span class="ident">receive_img_chunks</span></span>(<span>self, body_received, name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receive an an image whose length is specified with Chunked encoding.</p>
+<p>:param body_received: The part of this image that has already been received.
+:param name: The name that will be given to this image.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def receive_img_chunks(self, body_received, name):
+    &#34;&#34;&#34;Receive an an image whose length is specified with Chunked encoding.
+
+    :param body_received: The part of this image that has already been received.
+    :param name: The name that will be given to this image.
+    &#34;&#34;&#34;
+
+    body = body_received
+    prev_resp = b&#34;&#34;
+    resp = self.client.recv(2048)
+    while b&#34;0\r\n\r\n&#34; not in prev_resp + resp:
+        prev_resp = resp
+        resp = self.client.recv(2048)
+        body += resp
+    # with open(f&#39;{os.getcwd()}{os.sep}out{os.sep}{name.split(&#34;/&#34;)[-1]}&#39;, &#39;w+b&#39;) as f:
+    with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, f&#39;{name.split(&#34;/&#34;)[-1]}&#39;]), &#39;w+b&#39;) as f:
+        f.write(body)</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.receive_img_length"><code class="name flex">
+<span>def <span class="ident">receive_img_length</span></span>(<span>self, total_length, body_start, name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receive an an image whose length is specified with Content-Length encoding.</p>
+<p>:param total_length: The Content-Length value of this image.
+:param body_start: The part of this image that has already been received.
+:param name: The name that will be given to this image.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def receive_img_length(self, total_length, body_start, name):
+    &#34;&#34;&#34;Receive an an image whose length is specified with Content-Length encoding.
+
+    :param total_length: The Content-Length value of this image.
+    :param body_start: The part of this image that has already been received.
+    :param name: The name that will be given to this image.
+    &#34;&#34;&#34;
+
+    body = body_start
+    length_to_receive = total_length - len(body_start)
+    while length_to_receive &gt; 0:
+        part = self.client.recv(2048)
+        body += part
+        length_to_receive -= len(part)
+
+    # Inefficient alternative: receive byte by byte:
+    # for i in range(total_length - len(body_start)):
+    #     body += self.client.recv(1)
+    with open(f&#39;..{os.sep}out{os.sep}{name.split(&#34;/&#34;)[-1]}&#39;, &#39;w+b&#39;) as f:
+        f.write(body)</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.receive_length"><code class="name flex">
+<span>def <span class="ident">receive_length</span></span>(<span>self, length_to_receive, body_start)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receive the body of the uri in the case of Content-Length encoding.</p>
+<p>:param length_to_receive: The remaining length of the body to be received
+:param body_start: The part of the body that has already been received.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def receive_length(self, length_to_receive, body_start):
+    &#34;&#34;&#34; Receive the body of the uri in the case of Content-Length encoding.
+
+    :param length_to_receive: The remaining length of the body to be received
+    :param body_start: The part of the body that has already been received.
+    &#34;&#34;&#34;
+
+    self.body = body_start
+    while length_to_receive &gt; 0:
+        part = self.client.recv(2048)
+        self.body += part
+        length_to_receive -= len(part)
+
+    # Inefficient alternative: receive byte by byte:
+    # for i in range(length_to_receive):
+    #     self.body += self.client.recv(1)
+    self.save_body()</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.save_body"><code class="name flex">
+<span>def <span class="ident">save_body</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Save the body, fetch the images present on the site
+and modify the html code accordingly</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_body(self):
+    &#34;&#34;&#34;
+    Save the body, fetch the images present on the site
+    and modify the html code accordingly
+    &#34;&#34;&#34;
+
+    with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;w&#39;) as f:
+        try:
+            f.write(self.body.decode(&#39;ISO-8859-1&#39;))
+        except IOError:
+            print(&#34;ERROR: couldn&#39;t write body to file&#34;)</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.save_images"><code class="name flex">
+<span>def <span class="ident">save_images</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Iterate through all the img-objects in this HTML file
+and fetch each of them with a seperate GET-request.</p>
+<p>Finally, the src-attributes of this HTML file are
+modified to the local location of the fetched images.</p>
+<p>The results are written to index.html</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_images(self):
+    &#34;&#34;&#34;
+    Iterate through all the img-objects in this HTML file
+    and fetch each of them with a seperate GET-request.
+
+    Finally, the src-attributes of this HTML file are
+    modified to the local location of the fetched images.
+
+    The results are written to index.html
+    &#34;&#34;&#34;
+
+    # Read in saved body of GET request
+    with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;r&#39;) as f:
+        body = f.read()
+
+    soup = bs(body, &#39;html.parser&#39;)
+    img_urls = get_image_urls(soup)
+    for url in img_urls:
+        print(url)
+        if &#39;www&#39; in url and self.URI not in url:
+            # Handle external images with separate GET-request
+            image_client = MyClient(&#39;GET&#39;, url, 80)
+            image_client.handle_request()
+            continue
+        elif str(url).startswith(&#39;/&#39;):
+            request = f&#34;\r\nGET {url} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
+        else:
+            request = f&#34;\r\nGET /{url} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
+        self.client.sendall(request.encode(&#39;ascii&#39;))
+        self.receive_image(url)
+
+        # Replace src attribute
+        body = body.replace(url, os.sep.join([&#39;..&#39;, &#39;out&#39;, url.split(&#39;/&#39;)[-1]]))
+
+    # Write updated body
+    with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;w&#39;) as f:
+        f.write(body)</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.send_post"><code class="name flex">
+<span>def <span class="ident">send_post</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Send a POST request with the given contents.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def send_post(self):
+    &#34;&#34;&#34;Send a POST request with the given contents. &#34;&#34;&#34;
+
+    contents = input(&#34;String to POST to file on server: &#34;)
+    request = self.compose_request(&#39;POST&#39;, self.REL_PATH, contents)
+    self.client.sendall(request.encode(&#39;ascii&#39;))
+    self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
+    print(self.header, &#39;\n&#39;)</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.client.MyClient.send_put"><code class="name flex">
+<span>def <span class="ident">send_put</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Send a PUT request with the given contents.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def send_put(self):
+    &#34;&#34;&#34;Send a PUT request with the given contents. &#34;&#34;&#34;
+
+    contents = input(&#39;String to PUT to file on server: &#39;)
+    request = self.compose_request(&#39;PUT&#39;, self.REL_PATH, contents)
+    self.client.sendall(request.encode(&#39;ascii&#39;))
+    self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
+    print(self.header, &#39;\n&#39;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="Assignment1.src" href="index.html">Assignment1.src</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="Assignment1.src.client.clear_directory" href="#Assignment1.src.client.clear_directory">clear_directory</a></code></li>
+<li><code><a title="Assignment1.src.client.get_image_urls" href="#Assignment1.src.client.get_image_urls">get_image_urls</a></code></li>
+<li><code><a title="Assignment1.src.client.get_ipv4" href="#Assignment1.src.client.get_ipv4">get_ipv4</a></code></li>
+<li><code><a title="Assignment1.src.client.handle_moved_permanently" href="#Assignment1.src.client.handle_moved_permanently">handle_moved_permanently</a></code></li>
+<li><code><a title="Assignment1.src.client.parse_uri" href="#Assignment1.src.client.parse_uri">parse_uri</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="Assignment1.src.client.MyClient" href="#Assignment1.src.client.MyClient">MyClient</a></code></h4>
+<ul class="two-column">
+<li><code><a title="Assignment1.src.client.MyClient.compose_request" href="#Assignment1.src.client.MyClient.compose_request">compose_request</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.handle_request" href="#Assignment1.src.client.MyClient.handle_request">handle_request</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.receive_body" href="#Assignment1.src.client.MyClient.receive_body">receive_body</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.receive_chunks" href="#Assignment1.src.client.MyClient.receive_chunks">receive_chunks</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.receive_header" href="#Assignment1.src.client.MyClient.receive_header">receive_header</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.receive_image" href="#Assignment1.src.client.MyClient.receive_image">receive_image</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.receive_img_chunks" href="#Assignment1.src.client.MyClient.receive_img_chunks">receive_img_chunks</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.receive_img_length" href="#Assignment1.src.client.MyClient.receive_img_length">receive_img_length</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.receive_length" href="#Assignment1.src.client.MyClient.receive_length">receive_length</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.save_body" href="#Assignment1.src.client.MyClient.save_body">save_body</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.save_images" href="#Assignment1.src.client.MyClient.save_images">save_images</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.send_post" href="#Assignment1.src.client.MyClient.send_post">send_post</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.send_put" href="#Assignment1.src.client.MyClient.send_put">send_put</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

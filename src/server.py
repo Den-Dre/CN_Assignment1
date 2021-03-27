@@ -1,12 +1,12 @@
 import json
 import os
+import pathlib
 import signal
 import socket
 import sys
 import threading
 import time
-import dateutil.parser
-import dateutil
+from dateutil import parser
 from datetime import datetime
 
 
@@ -55,14 +55,20 @@ def get_modified_date(file_name):
     Retrieve the Last-Modified date out of the lastModifiedDates.json
     file for the given file on this server
 
+    Based on:
+    https://stackoverflow.com/questions/237079/how-to-get-file-creation-modification-date-times-in-python
+
     :param file_name: The file of which the Last-Modified date is retrieved.
     :return: The Last-Modified date of the given file.
     """
 
-    with open(os.path.join('..', 'myHTMLpage', 'lastModifiedDates')) as f:
-        data = json.load(f)
-        datetime_format = "%Y-%m-%d %H:%M:%S"
-        return datetime.strptime(data[file_name], datetime_format)
+    # with open(os.path.join('..', 'myHTMLpage', 'lastModifiedDates')) as f:
+    file_path = pathlib.Path(file_name)
+    file_path = pathlib.Path('../myHTMLpage/' + file_name)
+    modification_time = datetime.fromtimestamp(file_path.stat().st_mtime)
+    # datetime_format = "%Y-%m-%d %H:%M:%S GMT%z"
+    # return datetime.strptime(modification_time, datetime_format)
+    return modification_time
 
 
 def get_get_response_body(path):
@@ -116,13 +122,16 @@ def handle_post(data):
         rel_dir = rel_dir[1:]
 
     # Update the Last-Modified field of the given file.
-    update_last_modified(file_name, rel_dir)
+    # update_last_modified(file_name, rel_dir)
 
     try:
         # Append contents to file
         with open(os.path.join('..', 'myHTMLpage', rel_dir), 'a+') as f:
-            f.write(string)
-            return 200, string
+            try:
+                f.write(string)
+                return 200, string
+            except IOError:
+                return 500, get_500_page()
     except IOError:
         print(f'ERROR: file at {rel_dir} not found.')
         return 404, get_404_page()
@@ -140,14 +149,17 @@ def handle_put(data):
     if rel_dir.startswith('/'):
         rel_dir = rel_dir[1:]
 
-    update_last_modified(file_name, rel_dir)
+    # update_last_modified(file_name, rel_dir)
 
-    with open(os.path.join('..', 'myHTMLpage', rel_dir), 'w') as f:
-        try:
-            f.write(string)
-            return 200, string
-        except IOError:
-            return 500, get_500_page()
+    try:
+        with open(os.path.join('..', 'myHTMLpage', rel_dir), 'w') as f:
+            try:
+                f.write(string)
+                return 200, string
+            except IOError:
+                return 500, get_500_page()
+    except IOError:
+        return 500, get_500_page()
 
 
 def get_response_headers(code, body):
@@ -183,9 +195,12 @@ def my_parse_date(text):
     in the lastModifiedDates.json files into a datetime object.
 
     :param text: The string to be parsed
-    :return: A datetime representation of the given date in string format.
+    :return: An ISO datetime representation of the given date in string format.
     """
-    return dateutil.parser.isoparse(text)
+    # return dateutil.parser.isoparse(text)
+    # return parser.parse(text)
+    date_format = "%a, %d %B %Y %H:%M:%S GMT"
+    return datetime.strptime(text, date_format)
 
 
 def my_converter(o):
@@ -211,7 +226,7 @@ def get_if_modified_since_date(request):
     """
     for line in request.split('\r\n'):
         if "If-Modified-Since" in line:
-            return my_parse_date(''.join(line.split()[1:]))
+            return my_parse_date(' '.join(line.split()[1:]))
 
 
 def listen_to_client(client, address):
@@ -244,7 +259,7 @@ def listen_to_client(client, address):
                 response_header = get_response_headers(response_code, response_body)
 
                 if "If-Modified-Since" in request and request_type in ['GET', 'HEAD']:
-                    file_name = 'myHTMLpage' if path == '/' else path.split('/')[-1]
+                    file_name = 'myHTMLpage.html' if path == '/' else path.split('/')[-1]
                     if get_modified_date(file_name) < get_if_modified_since_date(request):
                         client.sendall(get_response_headers(304, "").encode('ascii'))
                         return
@@ -272,9 +287,9 @@ def listen_to_client(client, address):
 
 
 def graceful_shutdown(sig, dummy):
-    """Handle a keyboard interrupt.
+    """Handle a keyboard interrupt by successfully exiting the program.
 
-    :param sig: The keyboard interrupt.
+    :param sig: The keyboard interrupt signal.
     :param dummy: A dummy variable to match the required signature.
     """
 
@@ -328,6 +343,7 @@ if __name__ == "__main__":
     possible connection requests of clients.
     """
 
+    os.chdir(pathlib.Path(__file__).parent.absolute())
     signal.signal(signal.SIGINT, graceful_shutdown)
     port_num = 1234
     s = ThreadedServer(port_num)

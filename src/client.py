@@ -3,6 +3,8 @@ import os
 import pathlib
 import socket
 import sys
+from datetime import datetime
+
 from bs4 import BeautifulSoup as bs
 
 
@@ -328,6 +330,7 @@ class MyClient:
         request = f"{request_type} {rel_dir} HTTP/1.1\r\n"
         request += f"Host: {self.URI}\r\n"
         # request += f"If-Modified-Since: 2022-03-25T15:12:00\r\n"
+        # request += "If-Modified-Since: " + str(datetime.now().strftime("%a, %d %B %Y %H:%M:%S GMT"))
         if request_type in ['POST', 'PUT']:
             request += f"Content-Length: {str(len(contents))}\r\n"
             request += "\r\n"

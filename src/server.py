@@ -7,7 +7,10 @@ import sys
 import threading
 import time
 import mimetypes
+import dateutil.parser as parser
 from datetime import datetime
+
+from dateutil.parser import parser
 from markdown.util import deprecated
 
 
@@ -199,7 +202,14 @@ def my_parse_date(text):
     """
 
     date_format = "%a, %d %B %Y %H:%M:%S GMT"
-    return datetime.strptime(text, date_format)
+    try:
+        date = datetime.strptime(text, date_format)
+    except ValueError:
+        try:
+            date = datetime.strptime(text, "%Y-%m-%d %H:%M:%S.%f").replace(microsecond=0)
+        except ValueError:
+            raise Exception('Couldn\'t parse If-Modified-Since date.')
+    return date
 
 
 @deprecated
@@ -279,7 +289,6 @@ def listen_to_client(client, address):
                     print(response_header)
             else:
                 print("Client: ", address[0], " disconnected.")
-                client.close()
                 return
         except IOError:
             client.close()

@@ -119,7 +119,6 @@ class MyClient:
         """ Handle the given HTTP-request."""
 
         if self.REQUEST_TYPE == 'GET':
-            clear_directory()
             self.client.sendall(self.request.encode('ascii'))
             self.receive_body()
             self.save_images()
@@ -130,6 +129,18 @@ class MyClient:
             self.send_post()
         elif self.REQUEST_TYPE == 'PUT':
             self.send_put()
+
+    def handle_external_image(self, name):
+        """Handle a GET-request for an external image"""
+
+        self.client.sendall(self.request.encode('ascii'))
+        self.receive_image(name)
+
+        with open(os.sep.join(['..', 'out', 'index.html']), 'r') as f:
+            body = f.read()
+        body = body.replace(name, name.split('/')[-1])
+
+        return body
 
     def save_body(self):
         """
@@ -226,7 +237,7 @@ class MyClient:
             if 'www' in url and self.URI not in url:
                 # Handle external images with separate GET-request
                 image_client = MyClient('GET', url, 80)
-                image_client.handle_request()
+                body = image_client.handle_external_image(url)
                 continue
             elif str(url).startswith('/'):
                 request = f"\r\nGET {url} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n"
@@ -369,4 +380,5 @@ if __name__ == '__main__':
     except IndexError:
         print('Please give input of the form: client.py <HTTP REQUEST TYPE> <URI> <PORT>.')
         sys.exit(0)
+    clear_directory()
     client.handle_request()

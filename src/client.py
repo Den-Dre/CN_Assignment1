@@ -4,8 +4,6 @@ import pathlib
 import socket
 import sys
 import time
-from datetime import datetime
-
 from bs4 import BeautifulSoup as bs
 
 
@@ -77,6 +75,8 @@ def handle_moved_permanently(response):
 
 
 def clear_directory():
+    """Clear the 'out' directory: remove images and HTML files from previous GET-requests. """
+
     files = '../out/*'
     r = glob.glob(files)
     for i in r:
@@ -117,7 +117,10 @@ class MyClient:
         self.client.connect((self.URI, self.PORT))
 
     def handle_request(self):
-        """ Handle the given HTTP-request."""
+        """
+        Handle the given HTTP-request.
+        Only GET, HEAD, POST or PUT requests are supported.
+        """
 
         if self.REQUEST_TYPE == 'GET':
             self.client.sendall(self.request.encode('ascii'))
@@ -132,7 +135,14 @@ class MyClient:
             self.send_put()
 
     def handle_external_image(self, name):
-        """Handle a GET-request for an external image"""
+        """
+        Handle a GET-request for an image that's located on a different URI
+
+        :param name: The name of the external image that needs to be fetched
+        :return body:
+            The body of the current HTML page updated with the
+            newly created local src-attribute of this image.
+        """
 
         self.client.sendall(self.request.encode('ascii'))
         self.receive_image(name)
@@ -343,6 +353,7 @@ class MyClient:
         request = f"{request_type} {rel_dir} HTTP/1.1\r\n"
         request += f"Host: {self.URI}\r\n"
         request += f"If-Modified-Since: Mon, 28 March 2020 10:25:00 GMT\r\n"
+        # If-Modified-Since: current date (to use to demo 304 Not Modified):
         # request += "If-Modified-Since: " + str(datetime.now().strftime("%a, %d %B %Y %H:%M:%S GMT"))
         if request_type in ['POST', 'PUT']:
             request += f"Content-Length: {str(len(contents))}\r\n"
@@ -352,7 +363,7 @@ class MyClient:
         return request
 
     def send_post(self):
-        """Send a POST request with the given contents. """
+        """Send a POST request with the given contents."""
 
         contents = input("String to POST to file on server: ")
         request = self.compose_request('POST', self.REL_PATH, contents)

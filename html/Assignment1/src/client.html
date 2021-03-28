@@ -31,8 +31,7 @@ import os
 import pathlib
 import socket
 import sys
-from datetime import datetime
-
+import time
 from bs4 import BeautifulSoup as bs
 
 
@@ -104,6 +103,8 @@ def handle_moved_permanently(response):
 
 
 def clear_directory():
+    &#34;&#34;&#34;Clear the &#39;out&#39; directory: remove images and HTML files from previous GET-requests. &#34;&#34;&#34;
+
     files = &#39;../out/*&#39;
     r = glob.glob(files)
     for i in r:
@@ -144,10 +145,12 @@ class MyClient:
         self.client.connect((self.URI, self.PORT))
 
     def handle_request(self):
-        &#34;&#34;&#34; Handle the given HTTP-request.&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Handle the given HTTP-request.
+        Only GET, HEAD, POST or PUT requests are supported.
+        &#34;&#34;&#34;
 
         if self.REQUEST_TYPE == &#39;GET&#39;:
-            clear_directory()
             self.client.sendall(self.request.encode(&#39;ascii&#39;))
             self.receive_body()
             self.save_images()
@@ -158,6 +161,25 @@ class MyClient:
             self.send_post()
         elif self.REQUEST_TYPE == &#39;PUT&#39;:
             self.send_put()
+
+    def handle_external_image(self, name):
+        &#34;&#34;&#34;
+        Handle a GET-request for an image that&#39;s located on a different URI
+
+        :param name: The name of the external image that needs to be fetched
+        :return body:
+            The body of the current HTML page updated with the
+            newly created local src-attribute of this image.
+        &#34;&#34;&#34;
+
+        self.client.sendall(self.request.encode(&#39;ascii&#39;))
+        self.receive_image(name)
+
+        with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;r&#39;) as f:
+            body = f.read()
+        body = body.replace(name, name.split(&#39;/&#39;)[-1])
+
+        return body
 
     def save_body(self):
         &#34;&#34;&#34;
@@ -235,7 +257,7 @@ class MyClient:
     def save_images(self):
         &#34;&#34;&#34;
         Iterate through all the img-objects in this HTML file
-        and fetch each of them with a seperate GET-request.
+        and fetch each of them with a separate GET-request.
 
         Finally, the src-attributes of this HTML file are
         modified to the local location of the fetched images.
@@ -254,7 +276,7 @@ class MyClient:
             if &#39;www&#39; in url and self.URI not in url:
                 # Handle external images with separate GET-request
                 image_client = MyClient(&#39;GET&#39;, url, 80)
-                image_client.handle_request()
+                body = image_client.handle_external_image(url)
                 continue
             elif str(url).startswith(&#39;/&#39;):
                 request = f&#34;\r\nGET {url} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
@@ -359,6 +381,7 @@ class MyClient:
         request = f&#34;{request_type} {rel_dir} HTTP/1.1\r\n&#34;
         request += f&#34;Host: {self.URI}\r\n&#34;
         request += f&#34;If-Modified-Since: Mon, 28 March 2020 10:25:00 GMT\r\n&#34;
+        # If-Modified-Since: current date (to use to demo 304 Not Modified):
         # request += &#34;If-Modified-Since: &#34; + str(datetime.now().strftime(&#34;%a, %d %B %Y %H:%M:%S GMT&#34;))
         if request_type in [&#39;POST&#39;, &#39;PUT&#39;]:
             request += f&#34;Content-Length: {str(len(contents))}\r\n&#34;
@@ -368,11 +391,12 @@ class MyClient:
         return request
 
     def send_post(self):
-        &#34;&#34;&#34;Send a POST request with the given contents. &#34;&#34;&#34;
+        &#34;&#34;&#34;Send a POST request with the given contents.&#34;&#34;&#34;
 
         contents = input(&#34;String to POST to file on server: &#34;)
         request = self.compose_request(&#39;POST&#39;, self.REL_PATH, contents)
         self.client.sendall(request.encode(&#39;ascii&#39;))
+        time.sleep(0.1)  # Give the server some time to finish the I/O
         self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
         print(self.header, &#39;\n&#39;)
 
@@ -382,6 +406,7 @@ class MyClient:
         contents = input(&#39;String to PUT to file on server: &#39;)
         request = self.compose_request(&#39;PUT&#39;, self.REL_PATH, contents)
         self.client.sendall(request.encode(&#39;ascii&#39;))
+        time.sleep(0.1)  # Give the server some time to finish the I/O
         self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
         print(self.header, &#39;\n&#39;)
 
@@ -397,6 +422,7 @@ if __name__ == &#39;__main__&#39;:
     except IndexError:
         print(&#39;Please give input of the form: client.py &lt;HTTP REQUEST TYPE&gt; &lt;URI&gt; &lt;PORT&gt;.&#39;)
         sys.exit(0)
+    clear_directory()
     client.handle_request()</code></pre>
 </details>
 </section>
@@ -411,12 +437,14 @@ if __name__ == &#39;__main__&#39;:
 <span>def <span class="ident">clear_directory</span></span>(<span>)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Clear the 'out' directory: remove images and HTML files from previous GET-requests.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def clear_directory():
+    &#34;&#34;&#34;Clear the &#39;out&#39; directory: remove images and HTML files from previous GET-requests. &#34;&#34;&#34;
+
     files = &#39;../out/*&#39;
     r = glob.glob(files)
     for i in r:
@@ -588,10 +616,12 @@ HTTP-requests on provided uri's on a provided port.</p>
         self.client.connect((self.URI, self.PORT))
 
     def handle_request(self):
-        &#34;&#34;&#34; Handle the given HTTP-request.&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Handle the given HTTP-request.
+        Only GET, HEAD, POST or PUT requests are supported.
+        &#34;&#34;&#34;
 
         if self.REQUEST_TYPE == &#39;GET&#39;:
-            clear_directory()
             self.client.sendall(self.request.encode(&#39;ascii&#39;))
             self.receive_body()
             self.save_images()
@@ -602,6 +632,25 @@ HTTP-requests on provided uri's on a provided port.</p>
             self.send_post()
         elif self.REQUEST_TYPE == &#39;PUT&#39;:
             self.send_put()
+
+    def handle_external_image(self, name):
+        &#34;&#34;&#34;
+        Handle a GET-request for an image that&#39;s located on a different URI
+
+        :param name: The name of the external image that needs to be fetched
+        :return body:
+            The body of the current HTML page updated with the
+            newly created local src-attribute of this image.
+        &#34;&#34;&#34;
+
+        self.client.sendall(self.request.encode(&#39;ascii&#39;))
+        self.receive_image(name)
+
+        with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;r&#39;) as f:
+            body = f.read()
+        body = body.replace(name, name.split(&#39;/&#39;)[-1])
+
+        return body
 
     def save_body(self):
         &#34;&#34;&#34;
@@ -679,7 +728,7 @@ HTTP-requests on provided uri's on a provided port.</p>
     def save_images(self):
         &#34;&#34;&#34;
         Iterate through all the img-objects in this HTML file
-        and fetch each of them with a seperate GET-request.
+        and fetch each of them with a separate GET-request.
 
         Finally, the src-attributes of this HTML file are
         modified to the local location of the fetched images.
@@ -698,7 +747,7 @@ HTTP-requests on provided uri's on a provided port.</p>
             if &#39;www&#39; in url and self.URI not in url:
                 # Handle external images with separate GET-request
                 image_client = MyClient(&#39;GET&#39;, url, 80)
-                image_client.handle_request()
+                body = image_client.handle_external_image(url)
                 continue
             elif str(url).startswith(&#39;/&#39;):
                 request = f&#34;\r\nGET {url} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
@@ -803,6 +852,7 @@ HTTP-requests on provided uri's on a provided port.</p>
         request = f&#34;{request_type} {rel_dir} HTTP/1.1\r\n&#34;
         request += f&#34;Host: {self.URI}\r\n&#34;
         request += f&#34;If-Modified-Since: Mon, 28 March 2020 10:25:00 GMT\r\n&#34;
+        # If-Modified-Since: current date (to use to demo 304 Not Modified):
         # request += &#34;If-Modified-Since: &#34; + str(datetime.now().strftime(&#34;%a, %d %B %Y %H:%M:%S GMT&#34;))
         if request_type in [&#39;POST&#39;, &#39;PUT&#39;]:
             request += f&#34;Content-Length: {str(len(contents))}\r\n&#34;
@@ -812,11 +862,12 @@ HTTP-requests on provided uri's on a provided port.</p>
         return request
 
     def send_post(self):
-        &#34;&#34;&#34;Send a POST request with the given contents. &#34;&#34;&#34;
+        &#34;&#34;&#34;Send a POST request with the given contents.&#34;&#34;&#34;
 
         contents = input(&#34;String to POST to file on server: &#34;)
         request = self.compose_request(&#39;POST&#39;, self.REL_PATH, contents)
         self.client.sendall(request.encode(&#39;ascii&#39;))
+        time.sleep(0.1)  # Give the server some time to finish the I/O
         self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
         print(self.header, &#39;\n&#39;)
 
@@ -826,6 +877,7 @@ HTTP-requests on provided uri's on a provided port.</p>
         contents = input(&#39;String to PUT to file on server: &#39;)
         request = self.compose_request(&#39;PUT&#39;, self.REL_PATH, contents)
         self.client.sendall(request.encode(&#39;ascii&#39;))
+        time.sleep(0.1)  # Give the server some time to finish the I/O
         self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
         print(self.header, &#39;\n&#39;)</code></pre>
 </details>
@@ -857,6 +909,7 @@ HTTP-requests on provided uri's on a provided port.</p>
     request = f&#34;{request_type} {rel_dir} HTTP/1.1\r\n&#34;
     request += f&#34;Host: {self.URI}\r\n&#34;
     request += f&#34;If-Modified-Since: Mon, 28 March 2020 10:25:00 GMT\r\n&#34;
+    # If-Modified-Since: current date (to use to demo 304 Not Modified):
     # request += &#34;If-Modified-Since: &#34; + str(datetime.now().strftime(&#34;%a, %d %B %Y %H:%M:%S GMT&#34;))
     if request_type in [&#39;POST&#39;, &#39;PUT&#39;]:
         request += f&#34;Content-Length: {str(len(contents))}\r\n&#34;
@@ -866,20 +919,56 @@ HTTP-requests on provided uri's on a provided port.</p>
     return request</code></pre>
 </details>
 </dd>
+<dt id="Assignment1.src.client.MyClient.handle_external_image"><code class="name flex">
+<span>def <span class="ident">handle_external_image</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Handle a GET-request for an image that's located on a different URI</p>
+<p>:param name: The name of the external image that needs to be fetched
+:return body:
+The body of the current HTML page updated with the
+newly created local src-attribute of this image.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def handle_external_image(self, name):
+    &#34;&#34;&#34;
+    Handle a GET-request for an image that&#39;s located on a different URI
+
+    :param name: The name of the external image that needs to be fetched
+    :return body:
+        The body of the current HTML page updated with the
+        newly created local src-attribute of this image.
+    &#34;&#34;&#34;
+
+    self.client.sendall(self.request.encode(&#39;ascii&#39;))
+    self.receive_image(name)
+
+    with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, &#39;index.html&#39;]), &#39;r&#39;) as f:
+        body = f.read()
+    body = body.replace(name, name.split(&#39;/&#39;)[-1])
+
+    return body</code></pre>
+</details>
+</dd>
 <dt id="Assignment1.src.client.MyClient.handle_request"><code class="name flex">
 <span>def <span class="ident">handle_request</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Handle the given HTTP-request.</p></div>
+<div class="desc"><p>Handle the given HTTP-request.
+Only GET, HEAD, POST or PUT requests are supported.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def handle_request(self):
-    &#34;&#34;&#34; Handle the given HTTP-request.&#34;&#34;&#34;
+    &#34;&#34;&#34;
+    Handle the given HTTP-request.
+    Only GET, HEAD, POST or PUT requests are supported.
+    &#34;&#34;&#34;
 
     if self.REQUEST_TYPE == &#39;GET&#39;:
-        clear_directory()
         self.client.sendall(self.request.encode(&#39;ascii&#39;))
         self.receive_body()
         self.save_images()
@@ -1143,7 +1232,7 @@ and modify the html code accordingly</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Iterate through all the img-objects in this HTML file
-and fetch each of them with a seperate GET-request.</p>
+and fetch each of them with a separate GET-request.</p>
 <p>Finally, the src-attributes of this HTML file are
 modified to the local location of the fetched images.</p>
 <p>The results are written to index.html</p></div>
@@ -1154,7 +1243,7 @@ modified to the local location of the fetched images.</p>
 <pre><code class="python">def save_images(self):
     &#34;&#34;&#34;
     Iterate through all the img-objects in this HTML file
-    and fetch each of them with a seperate GET-request.
+    and fetch each of them with a separate GET-request.
 
     Finally, the src-attributes of this HTML file are
     modified to the local location of the fetched images.
@@ -1173,7 +1262,7 @@ modified to the local location of the fetched images.</p>
         if &#39;www&#39; in url and self.URI not in url:
             # Handle external images with separate GET-request
             image_client = MyClient(&#39;GET&#39;, url, 80)
-            image_client.handle_request()
+            body = image_client.handle_external_image(url)
             continue
         elif str(url).startswith(&#39;/&#39;):
             request = f&#34;\r\nGET {url} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n&#34;
@@ -1200,11 +1289,12 @@ modified to the local location of the fetched images.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def send_post(self):
-    &#34;&#34;&#34;Send a POST request with the given contents. &#34;&#34;&#34;
+    &#34;&#34;&#34;Send a POST request with the given contents.&#34;&#34;&#34;
 
     contents = input(&#34;String to POST to file on server: &#34;)
     request = self.compose_request(&#39;POST&#39;, self.REL_PATH, contents)
     self.client.sendall(request.encode(&#39;ascii&#39;))
+    time.sleep(0.1)  # Give the server some time to finish the I/O
     self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
     print(self.header, &#39;\n&#39;)</code></pre>
 </details>
@@ -1224,6 +1314,7 @@ modified to the local location of the fetched images.</p>
     contents = input(&#39;String to PUT to file on server: &#39;)
     request = self.compose_request(&#39;PUT&#39;, self.REL_PATH, contents)
     self.client.sendall(request.encode(&#39;ascii&#39;))
+    time.sleep(0.1)  # Give the server some time to finish the I/O
     self.header = self.client.recv(2048).decode(&#39;utf-8&#39;)
     print(self.header, &#39;\n&#39;)</code></pre>
 </details>
@@ -1257,8 +1348,9 @@ modified to the local location of the fetched images.</p>
 <ul>
 <li>
 <h4><code><a title="Assignment1.src.client.MyClient" href="#Assignment1.src.client.MyClient">MyClient</a></code></h4>
-<ul class="two-column">
+<ul class="">
 <li><code><a title="Assignment1.src.client.MyClient.compose_request" href="#Assignment1.src.client.MyClient.compose_request">compose_request</a></code></li>
+<li><code><a title="Assignment1.src.client.MyClient.handle_external_image" href="#Assignment1.src.client.MyClient.handle_external_image">handle_external_image</a></code></li>
 <li><code><a title="Assignment1.src.client.MyClient.handle_request" href="#Assignment1.src.client.MyClient.handle_request">handle_request</a></code></li>
 <li><code><a title="Assignment1.src.client.MyClient.receive_body" href="#Assignment1.src.client.MyClient.receive_body">receive_body</a></code></li>
 <li><code><a title="Assignment1.src.client.MyClient.receive_chunks" href="#Assignment1.src.client.MyClient.receive_chunks">receive_chunks</a></code></li>

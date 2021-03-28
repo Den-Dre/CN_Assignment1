@@ -7,10 +7,7 @@ import sys
 import threading
 import time
 import mimetypes
-import dateutil.parser as parser
 from datetime import datetime
-
-from dateutil.parser import parser
 from markdown.util import deprecated
 
 
@@ -66,8 +63,10 @@ def get_modified_date(file_name):
     :return: The Last-Modified date of the given file.
     """
 
-    file_path = pathlib.Path('../myHTMLpage/' + file_name)
-    modification_time = datetime.fromtimestamp(file_path.stat().st_mtime)
+    path = os.path.join('..', 'myHTMLpage', file_name)
+    # file_path = pathlib.Path('../myHTMLpage/' + file_name)
+    file_path = pathlib.Path(path)
+    modification_time = datetime.fromtimestamp(file_path.stat().st_mtime).replace(microsecond=0)
     return modification_time
 
 
@@ -148,6 +147,7 @@ def handle_put(data):
     :param data: The PUT-request.
     :return: Two values: the HTTP status code and the string that was PUT.
     """
+
     rel_dir = data.split()[1]
     string = data.split('\r\n\r\n')[1].rstrip()
     if rel_dir.startswith('/'):
@@ -179,6 +179,7 @@ def get_response_headers(code, body, file_type, file_name):
     :param file_name: The name of the requested file.
     :return: The HTTP response headers based on the given parameters
     """
+
     header = ''
     if code == 200:
         header += 'HTTP/1.1 200 OK\r\n'
@@ -232,6 +233,7 @@ def my_converter(o):
     :param o: The datetime object
     :return: A string representation of parameter o
     """
+
     if isinstance(o, datetime):
         return o.__str__()
 
@@ -242,6 +244,7 @@ def get_if_modified_since_date(request):
     :param request: The request out of which the If-Modified-Since value should be extracted.
     :return: The If-Modified-Since value contained in this header.
     """
+
     for line in request.split('\r\n'):
         if "If-Modified-Since" in line:
             return my_parse_date(' '.join(line.split()[1:]))
@@ -363,7 +366,7 @@ if __name__ == "__main__":
     """
 
     os.chdir(pathlib.Path(__file__).parent.absolute())
-    # signal.signal(signal.SIGINT, graceful_shutdown)
+    signal.signal(signal.SIGINT, graceful_shutdown)
     port_num = 1234
     s = ThreadedServer(port_num)
     s.listen()

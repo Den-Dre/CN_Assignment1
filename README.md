@@ -8,3 +8,4 @@ This is the first of two assignment of the course: 'Computer Networks' in the ye
   - (Ommit the <>'s when entering arguments for the placeholders).
   - Resulting response is fetched to `./out/index.html`.
 - **Server:** Run `python3 ./src/server.py`
+- **Output:** Output is stored in the directory: `./out`

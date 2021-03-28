@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>Assignment1.src.server API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>Assignment1.src.server</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import json
+import os
+import pathlib
+import signal
+import socket
+import sys
+import threading
+import time
+import mimetypes
+from datetime import datetime
+from markdown.util import deprecated
+
+
+def get_ipv4():
+    &#34;&#34;&#34; A method to retrieve the local IPv4-address of the machine.
+
+    Works by connecting a socket to the DNS server of Google on port 80 and
+    extracting the IPv4-address out of the the obtained name of the socket.
+    Source: https://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib
+    &#34;&#34;&#34;
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.connect((&#34;8.8.8.8&#34;, 80))
+    return sock.getsockname()[0]
+
+
+def get_404_page():
+    &#34;&#34;&#34; A that returns the HTML code for a 404 response.
+
+    :return: The HTML code for a page that should be displayed on a 404 response.
+    &#34;&#34;&#34;
+
+    return b&#34;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;p&gt;Error 404: File not found.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&#34;
+
+
+def get_500_page():
+    &#34;&#34;&#34; A that returns the HTML code for a 505 response.
+
+    :return: The HTML code for a page that should be displayed on a 505 response.
+    &#34;&#34;&#34;
+
+    return b&#34;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;p&gt;Error 500: Server error.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&#34;
+
+
+def get_400_page():
+    &#34;&#34;&#34; A that returns the HTML code for a 400 response.
+
+    :return: The HTML code for a page that should be displayed on a 400 response.
+    &#34;&#34;&#34;
+
+    return b&#34;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;p&gt;Error 400: Bad request.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&#34;
+
+
+def get_modified_date(file_name):
+    &#34;&#34;&#34;
+    Retrieve the Last-Modified date out of the lastModifiedDates.json
+    file for the given file on this server
+
+    Based on:
+    https://stackoverflow.com/questions/237079/how-to-get-file-creation-modification-date-times-in-python
+
+    :param file_name: The file of which the Last-Modified date is retrieved.
+    :return: The Last-Modified date of the given file.
+    &#34;&#34;&#34;
+
+    path = os.path.join(&#39;..&#39;, &#39;myHTMLpage&#39;, file_name)
+    # file_path = pathlib.Path(&#39;../myHTMLpage/&#39; + file_name)
+    file_path = pathlib.Path(path)
+    modification_time = datetime.fromtimestamp(file_path.stat().st_mtime).replace(microsecond=0)
+    return modification_time
+
+
+def get_get_response_body(path):
+    &#34;&#34;&#34; Get the body of the GET response of the file located at the parameter path
+
+    :param path: The path to the file which is requested by the GET response.
+    :return: Two values: the body of the requested file, and the HTTP status code.
+    &#34;&#34;&#34;
+
+    if path == &#39;/&#39;:
+        path_to_read = os.sep.join([&#39;..&#39;, &#39;myHTMLpage&#39;, &#39;myHTMLpage.html&#39;])
+    else:
+        if path.startswith(&#39;/&#39;):
+            path = path[1:]
+        path_to_read = os.sep.join([&#39;..&#39;, &#39;myHTMLpage&#39;, path])
+    try:
+        with open(path_to_read, &#39;rb&#39;) as f:  # &#39;rb&#39;: read in binary mode
+            file_type = mimetypes.guess_type(path_to_read)
+            return f.read(), 200, file_type
+    except IOError:
+        return get_404_page(), 404, None
+
+
+@deprecated
+def update_last_modified(file_name, rel_dir):
+    &#34;&#34;&#34;Update the Last-Modified value of the given file in the lastModifiedDates.json file.
+
+    :param file_name: The file to be updated.
+    :param rel_dir: The relative directory where the file resides.
+    &#34;&#34;&#34;
+    try:
+        # Update Last-Modified date
+        with open(os.path.join(&#39;..&#39;, &#39;myHTMLpage&#39;, &#39;lastModifiedDates&#39;), &#39;r&#39;) as f:
+            data = json.load(f)
+            if file_name not in data.keys():
+                data.update({file_name: &#34;&#34;})
+            data[file_name] = datetime.now().replace(microsecond=0)
+        with open(os.path.join(&#39;..&#39;, &#39;myHTMLpage&#39;, &#39;lastModifiedDates&#39;), &#39;w&#39;) as f:
+            f.write(json.dumps(data, indent=1, default=my_converter))
+    except IOError:
+        print(&#34;Couldn&#39;t write Last-Modified date for file: &#34;, rel_dir)
+
+
+def handle_post(data):
+    &#34;&#34;&#34; Handle a POST-request: update Last-Modified date and append string to file.
+
+    :param data: The POST-request.
+    :return: Two values: the HTTP response code, and the appended string.
+    &#34;&#34;&#34;
+
+    rel_dir = data.split()[1]
+    string = data.split(&#39;\r\n\r\n&#39;)[1].rstrip()
+    if rel_dir.startswith(&#39;/&#39;):
+        rel_dir = rel_dir[1:]
+
+    # Update the Last-Modified field of the given file.
+    # update_last_modified(file_name, rel_dir)
+
+    try:
+        # Append contents to file
+        path_to_read = os.path.join(&#39;..&#39;, &#39;myHTMLpage&#39;, rel_dir)
+        with open(path_to_read, &#39;a+&#39;) as f:
+            try:
+                f.write(string)
+                file_type = mimetypes.guess_type(path_to_read)
+                return 200, string, file_type
+            except IOError:
+                return 500, get_500_page()
+    except IOError:
+        print(f&#39;ERROR: file at {rel_dir} not found.&#39;)
+        return 404, get_404_page()
+
+
+def handle_put(data):
+    &#34;&#34;&#34; Handle a PUT-request: update the Last-Modified date and PUT the given string to a file.
+
+    :param data: The PUT-request.
+    :return: Two values: the HTTP status code and the string that was PUT.
+    &#34;&#34;&#34;
+
+    rel_dir = data.split()[1]
+    string = data.split(&#39;\r\n\r\n&#39;)[1].rstrip()
+    if rel_dir.startswith(&#39;/&#39;):
+        rel_dir = rel_dir[1:]
+
+    # Update the Last-Modified field of the given file.
+    # update_last_modified(file_name, rel_dir)
+
+    try:
+        path_to_read = os.path.join(&#39;..&#39;, &#39;myHTMLpage&#39;, rel_dir)
+        with open(path_to_read, &#39;w&#39;) as f:
+            try:
+                f.write(string)
+                file_type = mimetypes.guess_type(path_to_read)
+                return 200, string, file_type
+
+            except IOError:
+                return 500, get_500_page()
+    except IOError:
+        return 500, get_500_page()
+
+
+def get_response_headers(code, body, file_type, file_name):
+    &#34;&#34;&#34; Construct the headers of the HTTP response
+
+    :param code: the HTTP response code the headers are based upon.
+    :param body: The body of the HTTP response.
+    :param file_type: The file type of the requested resource.
+    :param file_name: The name of the requested file.
+    :return: The HTTP response headers based on the given parameters
+    &#34;&#34;&#34;
+
+    header = &#39;&#39;
+    if code == 200:
+        header += &#39;HTTP/1.1 200 OK\r\n&#39;
+    elif code == 404:
+        header += &#39;HTTP/1.1 404 Not Found\r\n&#39;
+    elif code == 500:
+        header += &#39;HTTP/1.1 500 Internal Server Error\r\n&#39;
+    elif code == 304:
+        header += &#39;HTTP/1.1 304 Not Modified\r\n&#39;
+    else:
+        raise NotImplemented(f&#39;Error code {code} not implemented. Body: {body}&#39;)
+    content_length = len(body)
+    current_date = time.strftime(&#34;%a, %d %b %Y %H:%M:%S&#34;, time.localtime())
+    header += f&#39;Date: {current_date}\r\n&#39;
+    header += f&#39;Last-Modified: {get_modified_date(file_name)}\r\n&#39;
+    header += f&#39;Content-Length: {content_length}\r\n&#39;
+    if file_type:
+        header += f&#39;Content-Type: {file_type[0]}; charset=UTF-8\r\n&#39;
+    return header + &#39;\r\n&#39;
+
+
+def my_parse_date(text):
+    &#34;&#34;&#34;
+    Parse a string representation of the
+    Last-Modified date in into a datetime object.
+
+    :param text: The string to be parsed
+    :return: A UTC datetime representation of the given date as a datetime object.
+    &#34;&#34;&#34;
+
+    date_format = &#34;%a, %d %B %Y %H:%M:%S GMT&#34;
+    try:
+        date = datetime.strptime(text, date_format)
+    except ValueError:
+        try:
+            date = datetime.strptime(text, &#34;%Y-%m-%d %H:%M:%S.%f&#34;).replace(microsecond=0)
+        except ValueError:
+            raise Exception(&#39;Couldn\&#39;t parse If-Modified-Since date.&#39;)
+    return date
+
+
+@deprecated
+def my_converter(o):
+    &#34;&#34;&#34;
+    Convert a datetime object to a string to be
+    able to write it to a JSON file. This method
+    is passed as argument in a json.dumps call.
+
+    Reference: https://code-maven.com/serialize-datetime-object-as-json-in-python
+
+    :param o: The datetime object
+    :return: A string representation of parameter o
+    &#34;&#34;&#34;
+
+    if isinstance(o, datetime):
+        return o.__str__()
+
+
+def get_if_modified_since_date(request):
+    &#34;&#34;&#34; Get the If-Modified-Since value of the given request.
+
+    :param request: The request out of which the If-Modified-Since value should be extracted.
+    :return: The If-Modified-Since value contained in this header.
+    &#34;&#34;&#34;
+
+    for line in request.split(&#39;\r\n&#39;):
+        if &#34;If-Modified-Since&#34; in line:
+            return my_parse_date(&#39; &#39;.join(line.split()[1:]))
+
+
+def listen_to_client(client, address):
+    &#34;&#34;&#34; Listen for HTTP requests of a client.
+
+    partially based on:
+    http://blog.wachowicz.eu/?p=256
+
+    :param client: The client that will be listened to to receive its HTTP requests.
+    :param address: The address of this client.
+    &#34;&#34;&#34;
+
+    # Typical header sizes are 700-800 bytes, up to 2kB, ref:
+    # https://dev.chromium.org/spdy/spdy-whitepaper
+    size = 2048
+    while True:
+        try:
+            data = client.recv(size)
+            print(&#39;[RECEIVED DATA] &#39;, data.decode(&#39;utf-8&#39;))
+            if data:
+                request = data.decode(&#39;utf-8&#39;)
+                request_type = request.split()[0]
+                print(&#34;Detected &#34;, request_type, &#34; request.&#34;)
+
+                path = request.split()[1]
+                file_name = &#39;myHTMLpage.html&#39; if path == &#39;/&#39; else path.split(&#39;/&#39;)[-1]
+
+                if request_type in [&#39;GET&#39;, &#39;HEAD&#39;]:
+                    response_body, response_code, file_type = get_get_response_body(path)
+                    if &#34;Host:&#34; not in request:
+                        response_body = get_400_page()
+                        response_code = 400
+                    response_header = get_response_headers(response_code, response_body, file_type, file_name)
+
+                    if &#34;If-Modified-Since:&#34; in request:
+                        if get_modified_date(file_name) &lt; get_if_modified_since_date(request):
+                            client.sendall(get_response_headers(304, &#34;&#34;, file_type, file_name).encode(&#39;ascii&#39;))
+                            break
+                    if request_type == &#39;GET&#39;:
+                        client.sendall(response_header.encode(&#39;ascii&#39;) + response_body)
+                    elif request_type == &#39;HEAD&#39;:
+                        client.sendall(response_header.encode(&#39;ascii&#39;))
+                elif request_type == &#39;POST&#39;:
+                    response_code, string, file_type = handle_post(request)
+                    response_header = get_response_headers(response_code, string, file_type, file_name)
+                    client.sendall(response_header.encode(&#39;ascii&#39;))
+                    print(response_header)
+                elif request_type == &#39;PUT&#39;:
+                    response_code, string, file_type = handle_put(request)
+                    response_header = get_response_headers(response_code, string, file_type, file_name)
+                    client.sendall(response_header.encode(&#39;ascii&#39;))
+                    print(response_header)
+            else:
+                print(&#34;Client: &#34;, address[0], &#34; disconnected.&#34;)
+                return
+        except IOError:
+            client.close()
+            return
+
+
+def graceful_shutdown(sig, dummy):
+    &#34;&#34;&#34;Handle a keyboard interrupt by successfully exiting the program.
+
+    :param sig: The keyboard interrupt signal.
+    :param dummy: A dummy variable to match the required signature.
+    &#34;&#34;&#34;
+
+    sys.exit(1)
+
+
+class ThreadedServer:
+    &#34;&#34;&#34;
+    A class to represent a HTTP server with multi threading
+
+    This is based on:
+    https://stackoverflow.com/questions/23828264/how-to-make-a-simple-multithreaded-socket-server-in-python-that-remembers-client
+    &#34;&#34;&#34;
+
+    def __init__(self, port):
+        &#34;&#34;&#34;
+        Initialise this server with the given parameters.
+
+        :param port: The port that this server will be hosted on.
+        &#34;&#34;&#34;
+
+        self.port = port
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.host = get_ipv4()
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            self.sock.bind((self.host, self.port))
+        except PermissionError:
+            print(&#34;Please enter a port number larger than 1024.&#34;)
+            exit()
+        host_location = (str(self.host) + &#34;:&#34; + str(self.port)).replace(&#34; &#34;, &#34;&#34;)
+        print(&#34;Hosting at: &#34;, host_location)
+
+    def listen(self):
+        &#34;&#34;&#34;
+        Listen to possible clients that send a connection request to this server.
+        &#34;&#34;&#34;
+
+        # Max number of queued connections:
+        self.sock.listen(5)
+        while True:
+            client, address = self.sock.accept()
+            client.settimeout(3)
+            threading.Thread(target=listen_to_client, args=(client, address)).start()
+            print(&#34;[NEW CONNECTION] Connected to client: &#34;, address[0])
+
+
+if __name__ == &#34;__main__&#34;:
+    &#34;&#34;&#34;
+    Create an instance of a multithreaded server and listen to 
+    possible connection requests of clients.
+    &#34;&#34;&#34;
+
+    os.chdir(pathlib.Path(__file__).parent.absolute())
+    signal.signal(signal.SIGINT, graceful_shutdown)
+    port_num = 1234
+    s = ThreadedServer(port_num)
+    s.listen()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="Assignment1.src.server.get_400_page"><code class="name flex">
+<span>def <span class="ident">get_400_page</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A that returns the HTML code for a 400 response.</p>
+<p>:return: The HTML code for a page that should be displayed on a 400 response.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_400_page():
+    &#34;&#34;&#34; A that returns the HTML code for a 400 response.
+
+    :return: The HTML code for a page that should be displayed on a 400 response.
+    &#34;&#34;&#34;
+
+    return b&#34;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;p&gt;Error 400: Bad request.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&#34;</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.get_404_page"><code class="name flex">
+<span>def <span class="ident">get_404_page</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A that returns the HTML code for a 404 response.</p>
+<p>:return: The HTML code for a page that should be displayed on a 404 response.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_404_page():
+    &#34;&#34;&#34; A that returns the HTML code for a 404 response.
+
+    :return: The HTML code for a page that should be displayed on a 404 response.
+    &#34;&#34;&#34;
+
+    return b&#34;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;p&gt;Error 404: File not found.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&#34;</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.get_500_page"><code class="name flex">
+<span>def <span class="ident">get_500_page</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A that returns the HTML code for a 505 response.</p>
+<p>:return: The HTML code for a page that should be displayed on a 505 response.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_500_page():
+    &#34;&#34;&#34; A that returns the HTML code for a 505 response.
+
+    :return: The HTML code for a page that should be displayed on a 505 response.
+    &#34;&#34;&#34;
+
+    return b&#34;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;p&gt;Error 500: Server error.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&#34;</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.get_get_response_body"><code class="name flex">
+<span>def <span class="ident">get_get_response_body</span></span>(<span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the body of the GET response of the file located at the parameter path</p>
+<p>:param path: The path to the file which is requested by the GET response.
+:return: Two values: the body of the requested file, and the HTTP status code.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_get_response_body(path):
+    &#34;&#34;&#34; Get the body of the GET response of the file located at the parameter path
+
+    :param path: The path to the file which is requested by the GET response.
+    :return: Two values: the body of the requested file, and the HTTP status code.
+    &#34;&#34;&#34;
+
+    if path == &#39;/&#39;:
+        path_to_read = os.sep.join([&#39;..&#39;, &#39;myHTMLpage&#39;, &#39;myHTMLpage.html&#39;])
+    else:
+        if path.startswith(&#39;/&#39;):
+            path = path[1:]
+        path_to_read = os.sep.join([&#39;..&#39;, &#39;myHTMLpage&#39;, path])
+    try:
+        with open(path_to_read, &#39;rb&#39;) as f:  # &#39;rb&#39;: read in binary mode
+            file_type = mimetypes.guess_type(path_to_read)
+            return f.read(), 200, file_type
+    except IOError:
+        return get_404_page(), 404, None</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.get_if_modified_since_date"><code class="name flex">
+<span>def <span class="ident">get_if_modified_since_date</span></span>(<span>request)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the If-Modified-Since value of the given request.</p>
+<p>:param request: The request out of which the If-Modified-Since value should be extracted.
+:return: The If-Modified-Since value contained in this header.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_if_modified_since_date(request):
+    &#34;&#34;&#34; Get the If-Modified-Since value of the given request.
+
+    :param request: The request out of which the If-Modified-Since value should be extracted.
+    :return: The If-Modified-Since value contained in this header.
+    &#34;&#34;&#34;
+
+    for line in request.split(&#39;\r\n&#39;):
+        if &#34;If-Modified-Since&#34; in line:
+            return my_parse_date(&#39; &#39;.join(line.split()[1:]))</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.get_ipv4"><code class="name flex">
+<span>def <span class="ident">get_ipv4</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A method to retrieve the local IPv4-address of the machine.</p>
+<p>Works by connecting a socket to the DNS server of Google on port 80 and
+extracting the IPv4-address out of the the obtained name of the socket.
+Source: <a href="https://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib">https://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_ipv4():
+    &#34;&#34;&#34; A method to retrieve the local IPv4-address of the machine.
+
+    Works by connecting a socket to the DNS server of Google on port 80 and
+    extracting the IPv4-address out of the the obtained name of the socket.
+    Source: https://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib
+    &#34;&#34;&#34;
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.connect((&#34;8.8.8.8&#34;, 80))
+    return sock.getsockname()[0]</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.get_modified_date"><code class="name flex">
+<span>def <span class="ident">get_modified_date</span></span>(<span>file_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieve the Last-Modified date out of the lastModifiedDates.json
+file for the given file on this server</p>
+<p>Based on:
+<a href="https://stackoverflow.com/questions/237079/how-to-get-file-creation-modification-date-times-in-python">https://stackoverflow.com/questions/237079/how-to-get-file-creation-modification-date-times-in-python</a></p>
+<p>:param file_name: The file of which the Last-Modified date is retrieved.
+:return: The Last-Modified date of the given file.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_modified_date(file_name):
+    &#34;&#34;&#34;
+    Retrieve the Last-Modified date out of the lastModifiedDates.json
+    file for the given file on this server
+
+    Based on:
+    https://stackoverflow.com/questions/237079/how-to-get-file-creation-modification-date-times-in-python
+
+    :param file_name: The file of which the Last-Modified date is retrieved.
+    :return: The Last-Modified date of the given file.
+    &#34;&#34;&#34;
+
+    path = os.path.join(&#39;..&#39;, &#39;myHTMLpage&#39;, file_name)
+    # file_path = pathlib.Path(&#39;../myHTMLpage/&#39; + file_name)
+    file_path = pathlib.Path(path)
+    modification_time = datetime.fromtimestamp(file_path.stat().st_mtime).replace(microsecond=0)
+    return modification_time</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.get_response_headers"><code class="name flex">
+<span>def <span class="ident">get_response_headers</span></span>(<span>code, body, file_type, file_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Construct the headers of the HTTP response</p>
+<p>:param code: the HTTP response code the headers are based upon.
+:param body: The body of the HTTP response.
+:param file_type: The file type of the requested resource.
+:param file_name: The name of the requested file.
+:return: The HTTP response headers based on the given parameters</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_response_headers(code, body, file_type, file_name):
+    &#34;&#34;&#34; Construct the headers of the HTTP response
+
+    :param code: the HTTP response code the headers are based upon.
+    :param body: The body of the HTTP response.
+    :param file_type: The file type of the requested resource.
+    :param file_name: The name of the requested file.
+    :return: The HTTP response headers based on the given parameters
+    &#34;&#34;&#34;
+
+    header = &#39;&#39;
+    if code == 200:
+        header += &#39;HTTP/1.1 200 OK\r\n&#39;
+    elif code == 404:
+        header += &#39;HTTP/1.1 404 Not Found\r\n&#39;
+    elif code == 500:
+        header += &#39;HTTP/1.1 500 Internal Server Error\r\n&#39;
+    elif code == 304:
+        header += &#39;HTTP/1.1 304 Not Modified\r\n&#39;
+    else:
+        raise NotImplemented(f&#39;Error code {code} not implemented. Body: {body}&#39;)
+    content_length = len(body)
+    current_date = time.strftime(&#34;%a, %d %b %Y %H:%M:%S&#34;, time.localtime())
+    header += f&#39;Date: {current_date}\r\n&#39;
+    header += f&#39;Last-Modified: {get_modified_date(file_name)}\r\n&#39;
+    header += f&#39;Content-Length: {content_length}\r\n&#39;
+    if file_type:
+        header += f&#39;Content-Type: {file_type[0]}; charset=UTF-8\r\n&#39;
+    return header + &#39;\r\n&#39;</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.graceful_shutdown"><code class="name flex">
+<span>def <span class="ident">graceful_shutdown</span></span>(<span>sig, dummy)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Handle a keyboard interrupt by successfully exiting the program.</p>
+<p>:param sig: The keyboard interrupt signal.
+:param dummy: A dummy variable to match the required signature.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def graceful_shutdown(sig, dummy):
+    &#34;&#34;&#34;Handle a keyboard interrupt by successfully exiting the program.
+
+    :param sig: The keyboard interrupt signal.
+    :param dummy: A dummy variable to match the required signature.
+    &#34;&#34;&#34;
+
+    sys.exit(1)</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.handle_post"><code class="name flex">
+<span>def <span class="ident">handle_post</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Handle a POST-request: update Last-Modified date and append string to file.</p>
+<p>:param data: The POST-request.
+:return: Two values: the HTTP response code, and the appended string.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def handle_post(data):
+    &#34;&#34;&#34; Handle a POST-request: update Last-Modified date and append string to file.
+
+    :param data: The POST-request.
+    :return: Two values: the HTTP response code, and the appended string.
+    &#34;&#34;&#34;
+
+    rel_dir = data.split()[1]
+    string = data.split(&#39;\r\n\r\n&#39;)[1].rstrip()
+    if rel_dir.startswith(&#39;/&#39;):
+        rel_dir = rel_dir[1:]
+
+    # Update the Last-Modified field of the given file.
+    # update_last_modified(file_name, rel_dir)
+
+    try:
+        # Append contents to file
+        path_to_read = os.path.join(&#39;..&#39;, &#39;myHTMLpage&#39;, rel_dir)
+        with open(path_to_read, &#39;a+&#39;) as f:
+            try:
+                f.write(string)
+                file_type = mimetypes.guess_type(path_to_read)
+                return 200, string, file_type
+            except IOError:
+                return 500, get_500_page()
+    except IOError:
+        print(f&#39;ERROR: file at {rel_dir} not found.&#39;)
+        return 404, get_404_page()</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.handle_put"><code class="name flex">
+<span>def <span class="ident">handle_put</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Handle a PUT-request: update the Last-Modified date and PUT the given string to a file.</p>
+<p>:param data: The PUT-request.
+:return: Two values: the HTTP status code and the string that was PUT.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def handle_put(data):
+    &#34;&#34;&#34; Handle a PUT-request: update the Last-Modified date and PUT the given string to a file.
+
+    :param data: The PUT-request.
+    :return: Two values: the HTTP status code and the string that was PUT.
+    &#34;&#34;&#34;
+
+    rel_dir = data.split()[1]
+    string = data.split(&#39;\r\n\r\n&#39;)[1].rstrip()
+    if rel_dir.startswith(&#39;/&#39;):
+        rel_dir = rel_dir[1:]
+
+    # Update the Last-Modified field of the given file.
+    # update_last_modified(file_name, rel_dir)
+
+    try:
+        path_to_read = os.path.join(&#39;..&#39;, &#39;myHTMLpage&#39;, rel_dir)
+        with open(path_to_read, &#39;w&#39;) as f:
+            try:
+                f.write(string)
+                file_type = mimetypes.guess_type(path_to_read)
+                return 200, string, file_type
+
+            except IOError:
+                return 500, get_500_page()
+    except IOError:
+        return 500, get_500_page()</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.listen_to_client"><code class="name flex">
+<span>def <span class="ident">listen_to_client</span></span>(<span>client, address)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Listen for HTTP requests of a client.</p>
+<p>partially based on:
+<a href="http://blog.wachowicz.eu/?p=256">http://blog.wachowicz.eu/?p=256</a></p>
+<p>:param client: The client that will be listened to to receive its HTTP requests.
+:param address: The address of this client.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def listen_to_client(client, address):
+    &#34;&#34;&#34; Listen for HTTP requests of a client.
+
+    partially based on:
+    http://blog.wachowicz.eu/?p=256
+
+    :param client: The client that will be listened to to receive its HTTP requests.
+    :param address: The address of this client.
+    &#34;&#34;&#34;
+
+    # Typical header sizes are 700-800 bytes, up to 2kB, ref:
+    # https://dev.chromium.org/spdy/spdy-whitepaper
+    size = 2048
+    while True:
+        try:
+            data = client.recv(size)
+            print(&#39;[RECEIVED DATA] &#39;, data.decode(&#39;utf-8&#39;))
+            if data:
+                request = data.decode(&#39;utf-8&#39;)
+                request_type = request.split()[0]
+                print(&#34;Detected &#34;, request_type, &#34; request.&#34;)
+
+                path = request.split()[1]
+                file_name = &#39;myHTMLpage.html&#39; if path == &#39;/&#39; else path.split(&#39;/&#39;)[-1]
+
+                if request_type in [&#39;GET&#39;, &#39;HEAD&#39;]:
+                    response_body, response_code, file_type = get_get_response_body(path)
+                    if &#34;Host:&#34; not in request:
+                        response_body = get_400_page()
+                        response_code = 400
+                    response_header = get_response_headers(response_code, response_body, file_type, file_name)
+
+                    if &#34;If-Modified-Since:&#34; in request:
+                        if get_modified_date(file_name) &lt; get_if_modified_since_date(request):
+                            client.sendall(get_response_headers(304, &#34;&#34;, file_type, file_name).encode(&#39;ascii&#39;))
+                            break
+                    if request_type == &#39;GET&#39;:
+                        client.sendall(response_header.encode(&#39;ascii&#39;) + response_body)
+                    elif request_type == &#39;HEAD&#39;:
+                        client.sendall(response_header.encode(&#39;ascii&#39;))
+                elif request_type == &#39;POST&#39;:
+                    response_code, string, file_type = handle_post(request)
+                    response_header = get_response_headers(response_code, string, file_type, file_name)
+                    client.sendall(response_header.encode(&#39;ascii&#39;))
+                    print(response_header)
+                elif request_type == &#39;PUT&#39;:
+                    response_code, string, file_type = handle_put(request)
+                    response_header = get_response_headers(response_code, string, file_type, file_name)
+                    client.sendall(response_header.encode(&#39;ascii&#39;))
+                    print(response_header)
+            else:
+                print(&#34;Client: &#34;, address[0], &#34; disconnected.&#34;)
+                return
+        except IOError:
+            client.close()
+            return</code></pre>
+</details>
+</dd>
+<dt id="Assignment1.src.server.my_parse_date"><code class="name flex">
+<span>def <span class="ident">my_parse_date</span></span>(<span>text)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parse a string representation of the
+Last-Modified date in into a datetime object.</p>
+<p>:param text: The string to be parsed
+:return: A UTC datetime representation of the given date as a datetime object.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def my_parse_date(text):
+    &#34;&#34;&#34;
+    Parse a string representation of the
+    Last-Modified date in into a datetime object.
+
+    :param text: The string to be parsed
+    :return: A UTC datetime representation of the given date as a datetime object.
+    &#34;&#34;&#34;
+
+    date_format = &#34;%a, %d %B %Y %H:%M:%S GMT&#34;
+    try:
+        date = datetime.strptime(text, date_format)
+    except ValueError:
+        try:
+            date = datetime.strptime(text, &#34;%Y-%m-%d %H:%M:%S.%f&#34;).replace(microsecond=0)
+        except ValueError:
+            raise Exception(&#39;Couldn\&#39;t parse If-Modified-Since date.&#39;)
+    return date</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="Assignment1.src.server.ThreadedServer"><code class="flex name class">
+<span>class <span class="ident">ThreadedServer</span></span>
+<span>(</span><span>port)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A class to represent a HTTP server with multi threading</p>
+<p>This is based on:
+<a href="https://stackoverflow.com/questions/23828264/how-to-make-a-simple-multithreaded-socket-server-in-python-that-remembers-client">https://stackoverflow.com/questions/23828264/how-to-make-a-simple-multithreaded-socket-server-in-python-that-remembers-client</a></p>
+<p>Initialise this server with the given parameters.</p>
+<p>:param port: The port that this server will be hosted on.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ThreadedServer:
+    &#34;&#34;&#34;
+    A class to represent a HTTP server with multi threading
+
+    This is based on:
+    https://stackoverflow.com/questions/23828264/how-to-make-a-simple-multithreaded-socket-server-in-python-that-remembers-client
+    &#34;&#34;&#34;
+
+    def __init__(self, port):
+        &#34;&#34;&#34;
+        Initialise this server with the given parameters.
+
+        :param port: The port that this server will be hosted on.
+        &#34;&#34;&#34;
+
+        self.port = port
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.host = get_ipv4()
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            self.sock.bind((self.host, self.port))
+        except PermissionError:
+            print(&#34;Please enter a port number larger than 1024.&#34;)
+            exit()
+        host_location = (str(self.host) + &#34;:&#34; + str(self.port)).replace(&#34; &#34;, &#34;&#34;)
+        print(&#34;Hosting at: &#34;, host_location)
+
+    def listen(self):
+        &#34;&#34;&#34;
+        Listen to possible clients that send a connection request to this server.
+        &#34;&#34;&#34;
+
+        # Max number of queued connections:
+        self.sock.listen(5)
+        while True:
+            client, address = self.sock.accept()
+            client.settimeout(3)
+            threading.Thread(target=listen_to_client, args=(client, address)).start()
+            print(&#34;[NEW CONNECTION] Connected to client: &#34;, address[0])</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="Assignment1.src.server.ThreadedServer.listen"><code class="name flex">
+<span>def <span class="ident">listen</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Listen to possible clients that send a connection request to this server.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def listen(self):
+    &#34;&#34;&#34;
+    Listen to possible clients that send a connection request to this server.
+    &#34;&#34;&#34;
+
+    # Max number of queued connections:
+    self.sock.listen(5)
+    while True:
+        client, address = self.sock.accept()
+        client.settimeout(3)
+        threading.Thread(target=listen_to_client, args=(client, address)).start()
+        print(&#34;[NEW CONNECTION] Connected to client: &#34;, address[0])</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="Assignment1.src" href="index.html">Assignment1.src</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="Assignment1.src.server.get_400_page" href="#Assignment1.src.server.get_400_page">get_400_page</a></code></li>
+<li><code><a title="Assignment1.src.server.get_404_page" href="#Assignment1.src.server.get_404_page">get_404_page</a></code></li>
+<li><code><a title="Assignment1.src.server.get_500_page" href="#Assignment1.src.server.get_500_page">get_500_page</a></code></li>
+<li><code><a title="Assignment1.src.server.get_get_response_body" href="#Assignment1.src.server.get_get_response_body">get_get_response_body</a></code></li>
+<li><code><a title="Assignment1.src.server.get_if_modified_since_date" href="#Assignment1.src.server.get_if_modified_since_date">get_if_modified_since_date</a></code></li>
+<li><code><a title="Assignment1.src.server.get_ipv4" href="#Assignment1.src.server.get_ipv4">get_ipv4</a></code></li>
+<li><code><a title="Assignment1.src.server.get_modified_date" href="#Assignment1.src.server.get_modified_date">get_modified_date</a></code></li>
+<li><code><a title="Assignment1.src.server.get_response_headers" href="#Assignment1.src.server.get_response_headers">get_response_headers</a></code></li>
+<li><code><a title="Assignment1.src.server.graceful_shutdown" href="#Assignment1.src.server.graceful_shutdown">graceful_shutdown</a></code></li>
+<li><code><a title="Assignment1.src.server.handle_post" href="#Assignment1.src.server.handle_post">handle_post</a></code></li>
+<li><code><a title="Assignment1.src.server.handle_put" href="#Assignment1.src.server.handle_put">handle_put</a></code></li>
+<li><code><a title="Assignment1.src.server.listen_to_client" href="#Assignment1.src.server.listen_to_client">listen_to_client</a></code></li>
+<li><code><a title="Assignment1.src.server.my_parse_date" href="#Assignment1.src.server.my_parse_date">my_parse_date</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="Assignment1.src.server.ThreadedServer" href="#Assignment1.src.server.ThreadedServer">ThreadedServer</a></code></h4>
+<ul class="">
+<li><code><a title="Assignment1.src.server.ThreadedServer.listen" href="#Assignment1.src.server.ThreadedServer.listen">listen</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

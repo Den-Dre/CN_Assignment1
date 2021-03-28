@@ -8,6 +8,7 @@ import threading
 import time
 import mimetypes
 from datetime import datetime
+from markdown.util import deprecated
 
 
 def get_ipv4():
@@ -62,11 +63,8 @@ def get_modified_date(file_name):
     :return: The Last-Modified date of the given file.
     """
 
-    # with open(os.path.join('..', 'myHTMLpage', 'lastModifiedDates')) as f:
     file_path = pathlib.Path('../myHTMLpage/' + file_name)
     modification_time = datetime.fromtimestamp(file_path.stat().st_mtime)
-    # datetime_format = "%Y-%m-%d %H:%M:%S GMT%z"
-    # return datetime.strptime(modification_time, datetime_format)
     return modification_time
 
 
@@ -89,8 +87,9 @@ def get_get_response_body(path):
         return get_404_page(), 404
 
 
+@deprecated
 def update_last_modified(file_name, rel_dir):
-    """Update the Last-Modified value of the given file.
+    """Update the Last-Modified value of the given file in the lastModifiedDates.json file.
 
     :param file_name: The file to be updated.
     :param rel_dir: The relative directory where the file resides.
@@ -147,6 +146,7 @@ def handle_put(data):
     if rel_dir.startswith('/'):
         rel_dir = rel_dir[1:]
 
+    # Update the Last-Modified field of the given file.
     # update_last_modified(file_name, rel_dir)
 
     try:
@@ -160,12 +160,13 @@ def handle_put(data):
         return 500, get_500_page()
 
 
-def get_response_headers(code, body, file_type):
+def get_response_headers(code, body, file_type, file_name):
     """ Construct the headers of the HTTP response
 
     :param code: the HTTP response code the headers are based upon.
     :param body: The body of the HTTP response.
     :param file_type: The file type of the requested resource.
+    :param file_name: The name of the requested file.
     :return: The HTTP response headers based on the given parameters
     """
     header = ''
@@ -179,35 +180,35 @@ def get_response_headers(code, body, file_type):
         header += 'HTTP/1.1 304 Not Modified\r\n'
     else:
         raise NotImplemented(f'Error code {code} not implemented. Body: {body}')
-    header += f'Content-Type: {file_type[0]}; charset=UTF-8\r\n'
-    current_date = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-    header += 'Date: ' + current_date + '\r\n'
     content_length = len(body)
-    # header += f'Last-Modified: {get_modified_date(date)}'
+    current_date = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
+    header += f'Content-Type: {file_type[0]}; charset=UTF-8\r\n'
+    header += f'Date: {current_date}\r\n'
+    header += f'Last-Modified: {get_modified_date(file_name)}\r\n'
     header += f'Content-Length: {content_length}\r\n'
     return header + '\r\n'
 
 
 def my_parse_date(text):
     """
-    Parse a string representation of the Last-Modified date
-    in the lastModifiedDates.json files into a datetime object.
+    Parse a string representation of the
+    Last-Modified date in into a datetime object.
 
     :param text: The string to be parsed
-    :return: An ISO datetime representation of the given date in string format.
+    :return: A UTC datetime representation of the given date as a datetime object.
     """
-    # return dateutil.parser.isoparse(text)
-    # return parser.parse(text)
+
     date_format = "%a, %d %B %Y %H:%M:%S GMT"
     return datetime.strptime(text, date_format)
 
 
+@deprecated
 def my_converter(o):
     """
     Convert a datetime object to a string to be
     able to write it to a JSON file. This method
-
     is passed as argument in a json.dumps call.
+
     Reference: https://code-maven.com/serialize-datetime-object-as-json-in-python
 
     :param o: The datetime object
@@ -251,16 +252,16 @@ def listen_to_client(client, address):
                 print("Detected ", request_type, " request.")
 
                 path = request.split()[1]
+                file_name = 'myHTMLpage.html' if path == '/' else path.split('/')[-1]
                 response_body, response_code, file_type = get_get_response_body(path)
                 if "Host:" not in request:
                     response_body = get_400_page()
                     response_code = 400
-                response_header = get_response_headers(response_code, response_body, file_type)
+                response_header = get_response_headers(response_code, response_body, file_type, file_name)
 
                 if "If-Modified-Since" in request and request_type in ['GET', 'HEAD']:
-                    file_name = 'myHTMLpage.html' if path == '/' else path.split('/')[-1]
                     if get_modified_date(file_name) < get_if_modified_since_date(request):
-                        client.sendall(get_response_headers(304, "", file_type).encode('ascii'))
+                        client.sendall(get_response_headers(304, "", file_type, file_name).encode('ascii'))
                         return
                 if request_type == 'GET':
                     client.sendall(response_header.encode('ascii') + response_body)
@@ -268,18 +269,18 @@ def listen_to_client(client, address):
                     client.sendall(response_header.encode('ascii'))
                 elif request_type == 'POST':
                     response_code, string = handle_post(request)
-                    response_header = get_response_headers(response_code, string, file_type)
+                    response_header = get_response_headers(response_code, string, file_type, file_name)
                     client.sendall(response_header.encode('ascii'))
                     print(response_header)
                 elif request_type == 'PUT':
                     response_code, string = handle_put(request)
-                    response_header = get_response_headers(response_code, string, file_type)
+                    response_header = get_response_headers(response_code, string, file_type, file_name)
                     client.sendall(response_header.encode('ascii'))
                     print(response_header)
-
             else:
                 print("Client: ", address[0], " disconnected.")
-                break
+                client.close()
+                return
         except IOError:
             client.close()
             return

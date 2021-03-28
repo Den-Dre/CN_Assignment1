@@ -5,6 +5,7 @@ import socket
 import sys
 import time
 from bs4 import BeautifulSoup as bs
+from datetime import datetime
 
 
 def get_ipv4():
@@ -110,7 +111,6 @@ class MyClient:
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         # Compose complete HTTP request
-        # self.request = f"{self.REQUEST_TYPE} {self.REL_PATH} HTTP/1.1\r\nHost: {self.URI}\r\n\r\n"
         self.request = self.compose_request(self.REQUEST_TYPE, self.REL_PATH, "")
 
         # Connect to given URI
@@ -152,6 +152,18 @@ class MyClient:
         body = body.replace(name, name.split('/')[-1])
 
         return body
+
+    def handle_not_modified(self, response):
+        """
+        Handle a 304 Not Modified response to the sent GET request,
+        by printing the header and saving the body of the response.
+
+        :param response: The response to the sent GET request
+        """
+
+        self.header, self.body = response.split(b'\r\n\r\n')
+        print(self.header.decode('utf-8'))
+        self.save_body()
 
     def save_body(self):
         """
@@ -210,6 +222,9 @@ class MyClient:
         response = self.client.recv(2048)
         if b"301 Moved Permanently" in response:
             handle_moved_permanently(response)
+        elif b"304 Not Modified" in response:
+            self.handle_not_modified(response)
+            return
         if b"Content-Length:" in response:
             for line in response.split(b'\r\n'):
                 if b"Content-Length:" in line:
@@ -351,10 +366,9 @@ class MyClient:
         """
 
         request = f"{request_type} {rel_dir} HTTP/1.1\r\n"
-        request += f"Host: {self.URI}\r\n"
-        request += f"If-Modified-Since: Mon, 28 March 2020 10:25:00 GMT\r\n"
-        # If-Modified-Since: current date (to use to demo 304 Not Modified):
-        # request += "If-Modified-Since: " + str(datetime.now().strftime("%a, %d %B %Y %H:%M:%S GMT"))
+        request += f"Host: {self.URI}\r\n"  # Demo 400 Bad Request (comment out this line)
+        # request += f"If-Modified-Since: Mon, 28 March 2020 10:25:00 GMT\r\n"  # DEMO (304 code: is modified)
+        # request += "If-Modified-Since: " + str(datetime.now().strftime("%a, %d %B %Y %H:%M:%S GMT"))  # (isn't modifd)
         if request_type in ['POST', 'PUT']:
             request += f"Content-Length: {str(len(contents))}\r\n"
             request += "\r\n"

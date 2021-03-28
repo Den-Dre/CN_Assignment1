@@ -10,6 +10,9 @@ import mimetypes
 from datetime import datetime
 from markdown.util import deprecated
 
+# DEMO 404 Not Found:
+# python3 client.py GET 192.168.20.247/oops.txt 1234
+
 
 def get_ipv4():
     """ A method to retrieve the local IPv4-address of the machine.
@@ -126,19 +129,21 @@ def handle_post(data):
     # Update the Last-Modified field of the given file.
     # update_last_modified(file_name, rel_dir)
 
-    try:
-        # Append contents to file
-        path_to_read = os.path.join('..', 'myHTMLpage', rel_dir)
+    path_to_read = os.path.join('..', 'myHTMLpage', rel_dir)
+    file = pathlib.Path(path_to_read)
+    if file.is_file():
+        # File exists
         with open(path_to_read, 'a+') as f:
             try:
                 f.write(string)
                 file_type = mimetypes.guess_type(path_to_read)
                 return 200, string, file_type
             except IOError:
-                return 500, get_500_page()
-    except IOError:
-        print(f'ERROR: file at {rel_dir} not found.')
-        return 404, get_404_page()
+                return 500, get_500_page(), None
+    else:
+        # File doesn't exist
+        print(f'File at location {rel_dir} not found.')
+        return 404, get_404_page(), None
 
 
 def handle_put(data):
@@ -158,6 +163,7 @@ def handle_put(data):
 
     try:
         path_to_read = os.path.join('..', 'myHTMLpage', rel_dir)
+        # path_to_read = '..'  # DEMO (500 code)
         with open(path_to_read, 'w') as f:
             try:
                 f.write(string)
@@ -165,9 +171,9 @@ def handle_put(data):
                 return 200, string, file_type
 
             except IOError:
-                return 500, get_500_page()
+                return 500, get_500_page(), None
     except IOError:
-        return 500, get_500_page()
+        return 500, get_500_page(), None
 
 
 def get_response_headers(code, body, file_type, file_name):
@@ -183,19 +189,22 @@ def get_response_headers(code, body, file_type, file_name):
     header = ''
     if code == 200:
         header += 'HTTP/1.1 200 OK\r\n'
+    elif code == 304:
+        header += 'HTTP/1.1 304 Not Modified\r\n'
+    elif code == 400:
+        header += 'HTTP/1.1 400 Bad Request\r\n'
     elif code == 404:
         header += 'HTTP/1.1 404 Not Found\r\n'
     elif code == 500:
         header += 'HTTP/1.1 500 Internal Server Error\r\n'
-    elif code == 304:
-        header += 'HTTP/1.1 304 Not Modified\r\n'
     else:
         raise NotImplemented(f'Error code {code} not implemented. Body: {body}')
     content_length = len(body)
     current_date = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
     header += f'Date: {current_date}\r\n'
-    header += f'Last-Modified: {get_modified_date(file_name)}\r\n'
     header += f'Content-Length: {content_length}\r\n'
+    if file_name and code not in [400, 404]:
+        header += f'Last-Modified: {get_modified_date(file_name)}\r\n'
     if file_type:
         header += f'Content-Type: {file_type[0]}; charset=UTF-8\r\n'
     return header + '\r\n'
@@ -304,6 +313,7 @@ def listen_to_client(client, address):
                 print("Client: ", address[0], " disconnected.")
                 return
         except IOError:
+            client.sendall(get_response_headers(500, get_500_page(), None, None).encode('ascii'))
             client.close()
             return
 

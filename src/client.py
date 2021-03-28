@@ -3,6 +3,7 @@ import os
 import pathlib
 import socket
 import sys
+import time
 from datetime import datetime
 
 from bs4 import BeautifulSoup as bs
@@ -218,7 +219,7 @@ class MyClient:
     def save_images(self):
         """
         Iterate through all the img-objects in this HTML file
-        and fetch each of them with a seperate GET-request.
+        and fetch each of them with a separate GET-request.
 
         Finally, the src-attributes of this HTML file are
         modified to the local location of the fetched images.
@@ -356,6 +357,7 @@ class MyClient:
         contents = input("String to POST to file on server: ")
         request = self.compose_request('POST', self.REL_PATH, contents)
         self.client.sendall(request.encode('ascii'))
+        time.sleep(0.1)  # Give the server some time to finish the I/O
         self.header = self.client.recv(2048).decode('utf-8')
         print(self.header, '\n')
 
@@ -365,6 +367,7 @@ class MyClient:
         contents = input('String to PUT to file on server: ')
         request = self.compose_request('PUT', self.REL_PATH, contents)
         self.client.sendall(request.encode('ascii'))
+        time.sleep(0.1)  # Give the server some time to finish the I/O
         self.header = self.client.recv(2048).decode('utf-8')
         print(self.header, '\n')
 

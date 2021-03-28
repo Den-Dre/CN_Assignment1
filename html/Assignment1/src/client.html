@@ -31,6 +31,8 @@ import os
 import pathlib
 import socket
 import sys
+from datetime import datetime
+
 from bs4 import BeautifulSoup as bs
 
 
@@ -58,6 +60,11 @@ def get_image_urls(soup):
         img_url = img.attrs.get(&#34;src&#34;)
         if img_url:
             img_urls.append(img_url)
+
+        # Also retrieve version of image to show when mouse hovers over it (e.g.: www.tcpipguide.com)
+        img_low_url = img.attrs.get(&#34;lowsrc&#34;)
+        if img_low_url:
+            img_urls.append(img_low_url)
     return img_urls
 
 
@@ -243,7 +250,7 @@ class MyClient:
         soup = bs(body, &#39;html.parser&#39;)
         img_urls = get_image_urls(soup)
         for url in img_urls:
-            print(url)
+            print(&#39;Fetching image at: &#39;, url)
             if &#39;www&#39; in url and self.URI not in url:
                 # Handle external images with separate GET-request
                 image_client = MyClient(&#39;GET&#39;, url, 80)
@@ -298,29 +305,31 @@ class MyClient:
             prev_resp = resp
             resp = self.client.recv(2048)
             body += resp
-        # with open(f&#39;{os.getcwd()}{os.sep}out{os.sep}{name.split(&#34;/&#34;)[-1]}&#39;, &#39;w+b&#39;) as f:
         with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, f&#39;{name.split(&#34;/&#34;)[-1]}&#39;]), &#39;w+b&#39;) as f:
             f.write(body)
 
     def receive_image(self, name):
         &#34;&#34;&#34; Receive an image using a GET-request
+        based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
 
         :param name: The name that will be given to the fetched image.
-        based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
         &#34;&#34;&#34;
+
         while True:
+            # Average header size is approx. 700-800 bytes, up to 2kB, ref: http://dev.chromium.org/spdy/spdy-whitepaper
             response = self.client.recv(2048)
             if b&#34;Content-Length:&#34; in response:
                 for line in response.split(b&#39;\r\n&#39;):
                     if b&#34;Content-Length:&#34; in line:
                         total_length_body = int(line.split()[1])
-                        body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
-                        print(&#34;Image length: &#34;, total_length_body)
+                        header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+                        print(header.decode(&#39;utf-8&#39;), &#39;\n&#39;)
                         self.receive_img_length(total_length_body, body_received, name)
                         return
                 raise IOError(&#34;Expected Content-Length header.&#34;)
             elif b&#34;Transfer-Encoding: chunked&#34; in response:
-                body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
+                header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+                print(header.decode(&#39;utf-8&#39;), &#39;\n&#39;)
                 self.receive_img_chunks(body_received, name)
                 return
             else:  # Header not yet completely processed OR Error code
@@ -335,7 +344,6 @@ class MyClient:
         &#34;&#34;&#34;
 
         self.header = self.client.recv(2048)
-        print(&#39;Resulting HEAD response:&#39;)
         print(self.header.decode(&#39;utf-8&#39;))
 
     def compose_request(self, request_type, rel_dir, contents):
@@ -350,7 +358,8 @@ class MyClient:
 
         request = f&#34;{request_type} {rel_dir} HTTP/1.1\r\n&#34;
         request += f&#34;Host: {self.URI}\r\n&#34;
-        # request += f&#34;If-Modified-Since: 2022-03-25T15:12:00\r\n&#34;
+        request += f&#34;If-Modified-Since: Mon, 28 March 2020 10:25:00 GMT\r\n&#34;
+        # request += &#34;If-Modified-Since: &#34; + str(datetime.now().strftime(&#34;%a, %d %B %Y %H:%M:%S GMT&#34;))
         if request_type in [&#39;POST&#39;, &#39;PUT&#39;]:
             request += f&#34;Content-Length: {str(len(contents))}\r\n&#34;
             request += &#34;\r\n&#34;
@@ -437,6 +446,11 @@ if __name__ == &#39;__main__&#39;:
         img_url = img.attrs.get(&#34;src&#34;)
         if img_url:
             img_urls.append(img_url)
+
+        # Also retrieve version of image to show when mouse hovers over it (e.g.: www.tcpipguide.com)
+        img_low_url = img.attrs.get(&#34;lowsrc&#34;)
+        if img_low_url:
+            img_urls.append(img_low_url)
     return img_urls</code></pre>
 </details>
 </dd>
@@ -680,7 +694,7 @@ HTTP-requests on provided uri's on a provided port.</p>
         soup = bs(body, &#39;html.parser&#39;)
         img_urls = get_image_urls(soup)
         for url in img_urls:
-            print(url)
+            print(&#39;Fetching image at: &#39;, url)
             if &#39;www&#39; in url and self.URI not in url:
                 # Handle external images with separate GET-request
                 image_client = MyClient(&#39;GET&#39;, url, 80)
@@ -735,29 +749,31 @@ HTTP-requests on provided uri's on a provided port.</p>
             prev_resp = resp
             resp = self.client.recv(2048)
             body += resp
-        # with open(f&#39;{os.getcwd()}{os.sep}out{os.sep}{name.split(&#34;/&#34;)[-1]}&#39;, &#39;w+b&#39;) as f:
         with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, f&#39;{name.split(&#34;/&#34;)[-1]}&#39;]), &#39;w+b&#39;) as f:
             f.write(body)
 
     def receive_image(self, name):
         &#34;&#34;&#34; Receive an image using a GET-request
+        based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
 
         :param name: The name that will be given to the fetched image.
-        based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
         &#34;&#34;&#34;
+
         while True:
+            # Average header size is approx. 700-800 bytes, up to 2kB, ref: http://dev.chromium.org/spdy/spdy-whitepaper
             response = self.client.recv(2048)
             if b&#34;Content-Length:&#34; in response:
                 for line in response.split(b&#39;\r\n&#39;):
                     if b&#34;Content-Length:&#34; in line:
                         total_length_body = int(line.split()[1])
-                        body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
-                        print(&#34;Image length: &#34;, total_length_body)
+                        header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+                        print(header.decode(&#39;utf-8&#39;), &#39;\n&#39;)
                         self.receive_img_length(total_length_body, body_received, name)
                         return
                 raise IOError(&#34;Expected Content-Length header.&#34;)
             elif b&#34;Transfer-Encoding: chunked&#34; in response:
-                body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
+                header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+                print(header.decode(&#39;utf-8&#39;), &#39;\n&#39;)
                 self.receive_img_chunks(body_received, name)
                 return
             else:  # Header not yet completely processed OR Error code
@@ -772,7 +788,6 @@ HTTP-requests on provided uri's on a provided port.</p>
         &#34;&#34;&#34;
 
         self.header = self.client.recv(2048)
-        print(&#39;Resulting HEAD response:&#39;)
         print(self.header.decode(&#39;utf-8&#39;))
 
     def compose_request(self, request_type, rel_dir, contents):
@@ -787,7 +802,8 @@ HTTP-requests on provided uri's on a provided port.</p>
 
         request = f&#34;{request_type} {rel_dir} HTTP/1.1\r\n&#34;
         request += f&#34;Host: {self.URI}\r\n&#34;
-        # request += f&#34;If-Modified-Since: 2022-03-25T15:12:00\r\n&#34;
+        request += f&#34;If-Modified-Since: Mon, 28 March 2020 10:25:00 GMT\r\n&#34;
+        # request += &#34;If-Modified-Since: &#34; + str(datetime.now().strftime(&#34;%a, %d %B %Y %H:%M:%S GMT&#34;))
         if request_type in [&#39;POST&#39;, &#39;PUT&#39;]:
             request += f&#34;Content-Length: {str(len(contents))}\r\n&#34;
             request += &#34;\r\n&#34;
@@ -840,7 +856,8 @@ HTTP-requests on provided uri's on a provided port.</p>
 
     request = f&#34;{request_type} {rel_dir} HTTP/1.1\r\n&#34;
     request += f&#34;Host: {self.URI}\r\n&#34;
-    # request += f&#34;If-Modified-Since: 2022-03-25T15:12:00\r\n&#34;
+    request += f&#34;If-Modified-Since: Mon, 28 March 2020 10:25:00 GMT\r\n&#34;
+    # request += &#34;If-Modified-Since: &#34; + str(datetime.now().strftime(&#34;%a, %d %B %Y %H:%M:%S GMT&#34;))
     if request_type in [&#39;POST&#39;, &#39;PUT&#39;]:
         request += f&#34;Content-Length: {str(len(contents))}\r\n&#34;
         request += &#34;\r\n&#34;
@@ -962,7 +979,6 @@ source: <a href="https://dev.chromium.org/spdy/spdy-whitepaper">https://dev.chro
     &#34;&#34;&#34;
 
     self.header = self.client.recv(2048)
-    print(&#39;Resulting HEAD response:&#39;)
     print(self.header.decode(&#39;utf-8&#39;))</code></pre>
 </details>
 </dd>
@@ -970,32 +986,35 @@ source: <a href="https://dev.chromium.org/spdy/spdy-whitepaper">https://dev.chro
 <span>def <span class="ident">receive_image</span></span>(<span>self, name)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Receive an image using a GET-request</p>
-<p>:param name: The name that will be given to the fetched image.
-based on: <a href="https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets">https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets</a></p></div>
+<div class="desc"><p>Receive an image using a GET-request
+based on: <a href="https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets">https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets</a></p>
+<p>:param name: The name that will be given to the fetched image.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def receive_image(self, name):
     &#34;&#34;&#34; Receive an image using a GET-request
+    based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
 
     :param name: The name that will be given to the fetched image.
-    based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
     &#34;&#34;&#34;
+
     while True:
+        # Average header size is approx. 700-800 bytes, up to 2kB, ref: http://dev.chromium.org/spdy/spdy-whitepaper
         response = self.client.recv(2048)
         if b&#34;Content-Length:&#34; in response:
             for line in response.split(b&#39;\r\n&#39;):
                 if b&#34;Content-Length:&#34; in line:
                     total_length_body = int(line.split()[1])
-                    body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
-                    print(&#34;Image length: &#34;, total_length_body)
+                    header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+                    print(header.decode(&#39;utf-8&#39;), &#39;\n&#39;)
                     self.receive_img_length(total_length_body, body_received, name)
                     return
             raise IOError(&#34;Expected Content-Length header.&#34;)
         elif b&#34;Transfer-Encoding: chunked&#34; in response:
-            body_received = response.split(b&#34;\r\n\r\n&#34;)[1]
+            header, body_received = response.split(b&#34;\r\n\r\n&#34;)
+            print(header.decode(&#39;utf-8&#39;), &#39;\n&#39;)
             self.receive_img_chunks(body_received, name)
             return
         else:  # Header not yet completely processed OR Error code
@@ -1028,7 +1047,6 @@ based on: <a href="https://stackoverflow.com/questions/43408325/how-to-download-
         prev_resp = resp
         resp = self.client.recv(2048)
         body += resp
-    # with open(f&#39;{os.getcwd()}{os.sep}out{os.sep}{name.split(&#34;/&#34;)[-1]}&#39;, &#39;w+b&#39;) as f:
     with open(os.sep.join([&#39;..&#39;, &#39;out&#39;, f&#39;{name.split(&#34;/&#34;)[-1]}&#39;]), &#39;w+b&#39;) as f:
         f.write(body)</code></pre>
 </details>
@@ -1151,7 +1169,7 @@ modified to the local location of the fetched images.</p>
     soup = bs(body, &#39;html.parser&#39;)
     img_urls = get_image_urls(soup)
     for url in img_urls:
-        print(url)
+        print(&#39;Fetching image at: &#39;, url)
         if &#39;www&#39; in url and self.URI not in url:
             # Handle external images with separate GET-request
             image_client = MyClient(&#39;GET&#39;, url, 80)

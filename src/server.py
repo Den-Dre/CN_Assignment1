@@ -6,7 +6,7 @@ import socket
 import sys
 import threading
 import time
-from dateutil import parser
+import mimetypes
 from datetime import datetime
 
 
@@ -63,7 +63,6 @@ def get_modified_date(file_name):
     """
 
     # with open(os.path.join('..', 'myHTMLpage', 'lastModifiedDates')) as f:
-    file_path = pathlib.Path(file_name)
     file_path = pathlib.Path('../myHTMLpage/' + file_name)
     modification_time = datetime.fromtimestamp(file_path.stat().st_mtime)
     # datetime_format = "%Y-%m-%d %H:%M:%S GMT%z"
@@ -84,7 +83,8 @@ def get_get_response_body(path):
         path_to_read = os.sep.join(['..', 'myHTMLpage', path])
     try:
         with open(path_to_read, 'rb') as f:  # 'rb': read in binary mode
-            return f.read(), 200
+            file_type = mimetypes.guess_type(path_to_read)
+            return f.read(), 200, file_type
     except IOError:
         return get_404_page(), 404
 
@@ -116,7 +116,6 @@ def handle_post(data):
     """
 
     rel_dir = data.split()[1]
-    file_name = rel_dir.split('/')[-1]
     string = data.split('\r\n\r\n')[1].rstrip()
     if rel_dir.startswith('/'):
         rel_dir = rel_dir[1:]
@@ -144,7 +143,6 @@ def handle_put(data):
     :return: Two values: the HTTP status code and the string that was PUT.
     """
     rel_dir = data.split()[1]
-    file_name = rel_dir.split('/')[-1]
     string = data.split('\r\n\r\n')[1].rstrip()
     if rel_dir.startswith('/'):
         rel_dir = rel_dir[1:]
@@ -162,11 +160,12 @@ def handle_put(data):
         return 500, get_500_page()
 
 
-def get_response_headers(code, body):
+def get_response_headers(code, body, file_type):
     """ Construct the headers of the HTTP response
 
     :param code: the HTTP response code the headers are based upon.
     :param body: The body of the HTTP response.
+    :param file_type: The file type of the requested resource.
     :return: The HTTP response headers based on the given parameters
     """
     header = ''
@@ -180,7 +179,7 @@ def get_response_headers(code, body):
         header += 'HTTP/1.1 304 Not Modified\r\n'
     else:
         raise NotImplemented(f'Error code {code} not implemented. Body: {body}')
-    header += 'Content-Type: text/html; charset=UTF-8\r\n'
+    header += f'Content-Type: {file_type[0]}; charset=UTF-8\r\n'
     current_date = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
     header += 'Date: ' + current_date + '\r\n'
     content_length = len(body)
@@ -252,16 +251,16 @@ def listen_to_client(client, address):
                 print("Detected ", request_type, " request.")
 
                 path = request.split()[1]
-                response_body, response_code = get_get_response_body(path)
+                response_body, response_code, file_type = get_get_response_body(path)
                 if "Host:" not in request:
                     response_body = get_400_page()
                     response_code = 400
-                response_header = get_response_headers(response_code, response_body)
+                response_header = get_response_headers(response_code, response_body, file_type)
 
                 if "If-Modified-Since" in request and request_type in ['GET', 'HEAD']:
                     file_name = 'myHTMLpage.html' if path == '/' else path.split('/')[-1]
                     if get_modified_date(file_name) < get_if_modified_since_date(request):
-                        client.sendall(get_response_headers(304, "").encode('ascii'))
+                        client.sendall(get_response_headers(304, "", file_type).encode('ascii'))
                         return
                 if request_type == 'GET':
                     client.sendall(response_header.encode('ascii') + response_body)
@@ -269,12 +268,12 @@ def listen_to_client(client, address):
                     client.sendall(response_header.encode('ascii'))
                 elif request_type == 'POST':
                     response_code, string = handle_post(request)
-                    response_header = get_response_headers(response_code, string)
+                    response_header = get_response_headers(response_code, string, file_type)
                     client.sendall(response_header.encode('ascii'))
                     print(response_header)
                 elif request_type == 'PUT':
                     response_code, string = handle_put(request)
-                    response_header = get_response_headers(response_code, string)
+                    response_header = get_response_headers(response_code, string, file_type)
                     client.sendall(response_header.encode('ascii'))
                     print(response_header)
 

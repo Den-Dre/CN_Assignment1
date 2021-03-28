@@ -277,29 +277,31 @@ class MyClient:
             prev_resp = resp
             resp = self.client.recv(2048)
             body += resp
-        # with open(f'{os.getcwd()}{os.sep}out{os.sep}{name.split("/")[-1]}', 'w+b') as f:
         with open(os.sep.join(['..', 'out', f'{name.split("/")[-1]}']), 'w+b') as f:
             f.write(body)
 
     def receive_image(self, name):
         """ Receive an image using a GET-request
+        based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
 
         :param name: The name that will be given to the fetched image.
-        based on: https://stackoverflow.com/questions/43408325/how-to-download-image-from-http-server-python-sockets
         """
+
         while True:
+            # Average header size is approx. 700-800 bytes, up to 2kB, ref: http://dev.chromium.org/spdy/spdy-whitepaper
             response = self.client.recv(2048)
             if b"Content-Length:" in response:
                 for line in response.split(b'\r\n'):
                     if b"Content-Length:" in line:
                         total_length_body = int(line.split()[1])
-                        body_received = response.split(b"\r\n\r\n")[1]
-                        # print("Image length: ", total_length_body)
+                        header, body_received = response.split(b"\r\n\r\n")
+                        print(header.decode('utf-8'), '\n')
                         self.receive_img_length(total_length_body, body_received, name)
                         return
                 raise IOError("Expected Content-Length header.")
             elif b"Transfer-Encoding: chunked" in response:
-                body_received = response.split(b"\r\n\r\n")[1]
+                header, body_received = response.split(b"\r\n\r\n")
+                print(header.decode('utf-8'), '\n')
                 self.receive_img_chunks(body_received, name)
                 return
             else:  # Header not yet completely processed OR Error code
@@ -314,7 +316,6 @@ class MyClient:
         """
 
         self.header = self.client.recv(2048)
-        print('Resulting HEAD response:')
         print(self.header.decode('utf-8'))
 
     def compose_request(self, request_type, rel_dir, contents):
@@ -329,7 +330,7 @@ class MyClient:
 
         request = f"{request_type} {rel_dir} HTTP/1.1\r\n"
         request += f"Host: {self.URI}\r\n"
-        # request += f"If-Modified-Since: 2022-03-25T15:12:00\r\n"
+        request += f"If-Modified-Since: Mon, 28 March 2020 10:25:00 GMT\r\n"
         # request += "If-Modified-Since: " + str(datetime.now().strftime("%a, %d %B %Y %H:%M:%S GMT"))
         if request_type in ['POST', 'PUT']:
             request += f"Content-Length: {str(len(contents))}\r\n"
